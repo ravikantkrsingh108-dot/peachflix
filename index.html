@@ -219,19 +219,18 @@ main{padding-top:var(--header-h);padding-bottom:calc(var(--tab-h) + 18px);min-he
 <script>
 (function(){
 'use strict';
-
-/* ============================ helpers ============================ */
+/* ============ helpers ============ */
 const $=s=>document.querySelector(s);
 const view=$('#view');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safeDecode=s=>{try{return decodeURIComponent(String(s??''))}catch{return String(s??'')}};
 const debounce=(fn,ms)=>{let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms)}};
 function el(html){const t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstElementChild}
 function commit(node){view.replaceChildren(node)}
 const settled=r=>r.status==='fulfilled'?(r.value||[]):[];
 const interleave=(...lists)=>{const out=[],max=Math.max(0,...lists.map(l=>l.length));for(let i=0;i<max;i++)for(const l of lists)if(i<l.length)out.push(l[i]);return out};
 let cleanup=null;
-
-/* ============================ icons ============================ */
+/* ============ icons ============ */
 const ICONS={
  home:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.7V21h5v-6h4v6h5V9.7"/>',
  film:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 5v14M17 5v14M3 9.5h4M3 14.5h4M17 9.5h4M17 14.5h4"/>',
@@ -242,41 +241,31 @@ const ICONS={
  gear:'<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="16" cy="12" r="2"/><circle cx="7" cy="18" r="2"/>'};
 const icon=n=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
 document.querySelectorAll('[data-icon]').forEach(x=>x.insertAdjacentHTML('afterbegin',icon(x.dataset.icon)));
-
-/* ============================ constants ============================ */
+/* ============ constants ============ */
 const DEFAULT_PLAYER='https://peachify.top';
-const CINEMETA='https://v3-cinemeta.strem.io';       // keyless metadata (like CineStream provider)
-const KITSU='https://anime-kitsu.strem.fun';          // keyless anime metadata
-const HAGLUND='https://arm.haglund.dev/api/v2';       // kitsu -> tmdb id mapping
+const CINEMETA='https://v3-cinemeta.strem.io';
+const KITSU='https://anime-kitsu.strem.fun';
+const HAGLUND='https://arm.haglund.dev/api/v2';
 const IMDB_GENRES=['Action','Adventure','Animation','Biography','Comedy','Crime','Documentary','Drama','Family','Fantasy','History','Horror','Music','Musical','Mystery','Romance','Sci-Fi','Sport','Thriller','War','Western'];
 const LANGS=[['','Any language'],['en','English'],['hi','Hindi'],['ko','Korean'],['ja','Japanese'],['zh','Chinese'],['es','Spanish'],['fr','French'],['de','German'],['ta','Tamil'],['te','Telugu'],['ml','Malayalam']];
-
-/* ============================ storage ============================ */
-const DB={
-  get(k,f){try{const v=JSON.parse(localStorage.getItem(k));return v==null?f:v}catch{return f}},
-  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
-};
+/* ============ storage ============ */
+const DB={get(k,f){try{const v=JSON.parse(localStorage.getItem(k));return v==null?f:v}catch{return f}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
 const Settings={
   get(){return{tmdbKey:'',dub:'',sub:'',quality:'',server:'',accent:'#ff8359',lang:'en-US',playerBase:DEFAULT_PLAYER,...DB.get('pf_settings',{})}},
   set(patch){const s={...this.get(),...patch};DB.set('pf_settings',s);if(patch.accent)applyAccent(s.accent);return s}
 };
 function applyAccent(hex){if(!hex)return;document.documentElement.style.setProperty('--accent',hex);document.documentElement.style.setProperty('--accent2',hex)}
-
 function makeListStore(key){
-  return{
-    key,
+  return{key,
     list(){return DB.get(key,[])},
     has(type,id){return this.list().some(i=>String(i.id)===String(id)&&i.type===type)},
     toggle(item){let l=this.list();if(this.has(item.type,item.id)){DB.set(key,l.filter(i=>!(String(i.id)===String(item.id)&&i.type===item.type)));return false}l.unshift(item);DB.set(key,l);return true},
-    remove(type,id){DB.set(key,this.list().filter(i=>!(String(i.id)===String(id)&&i.type===type)))}
-  };
+    remove(type,id){DB.set(key,this.list().filter(i=>!(String(i.id)===String(id)&&i.type===type)))}};
 }
 const Fav=makeListStore('pf_favs'),WL=makeListStore('pf_watchlist');
-
 const Groups={
   KEY:'pf_groups',
-  all(){return DB.get(this.KEY,{})},
-  save(g){DB.set(this.KEY,g)},
+  all(){return DB.get(this.KEY,{})},save(g){DB.set(this.KEY,g)},
   get(uid){return this.all()[uid]||null},
   create(name){const g=this.all();const uid=Date.now().toString(36)+Math.random().toString(36).slice(2,6);g[uid]={name,created:Date.now(),items:[]};this.save(g);return uid},
   rename(uid,name){const g=this.all();if(g[uid]){g[uid].name=name;this.save(g)}},
@@ -284,8 +273,7 @@ const Groups={
   toggle(uid,item){const g=this.all();if(!g[uid])return false;const l=g[uid].items;const i=l.findIndex(x=>String(x.id)===String(item.id)&&x.type===item.type);if(i>=0){l.splice(i,1);this.save(g);return false}l.unshift(item);this.save(g);return true},
   removeItem(uid,id,type){const g=this.all();if(!g[uid])return;g[uid].items=g[uid].items.filter(x=>!(String(x.id)===String(id)&&x.type===type));this.save(g)}
 };
-
-/* ============================ Peachify progress ============================ */
+/* ============ peachify progress + id aliases ============ */
 function peachOrigin(){try{return new URL(Settings.get().playerBase||DEFAULT_PLAYER).origin}catch{return DEFAULT_PLAYER}}
 const Progress={
   KEY:'peachifyProgress',
@@ -306,8 +294,16 @@ const Progress={
 };
 const notFinished=r=>{if(r.type==='tv')return true;const p=r.progress||{};return!(p.duration>0&&(p.watched||0)/p.duration>=0.95)};
 function finishOrZero(p){if(!p||!p.duration)return 0;return(p.watched||0)/p.duration>=0.95?0:Math.max(0,Math.floor(p.watched||0))}
+/* the player reports TMDB ids; we may open via imdb/kitsu ids — aliases link them */
+const Aliases={
+  KEY:'pf_aliases',
+  all(){return DB.get(this.KEY,{})},
+  add(from,to){from=String(from);to=String(to);if(!from||!to||from===to)return;const a=this.all();a[from]=to;DB.set(this.KEY,a)},
+  resolve(id){const a=this.all();let k=String(id);const seen=new Set();while(a[k]&&!seen.has(k)){seen.add(k);k=a[k]}return k}
+};
+function progFor(d){return Progress.get(Aliases.resolve(String((d&&d.playId)!=null?d.playId:d.id)))}
 function resumeFor(d,season,episode){
-  const prog=Progress.get(d.playId);if(!prog)return 0;
+  const prog=progFor(d);if(!prog)return 0;
   if(d.playType==='tv'){
     const ep=prog.show_progress?.[`s${season}e${episode}`]?.progress;
     if(ep)return finishOrZero(ep);
@@ -331,28 +327,31 @@ function peachUrl(o){
 }
 function cardPlayHref(card){
   if(card.type==='movie')return`#/watch/movie/${encodeURIComponent(String(card.id))}`;
-  const prog=Progress.get(card.id);
+  const prog=Progress.get(Aliases.resolve(String(card.id)));
   const s=+prog?.last_season_watched||1,e=+prog?.last_episode_watched||1;
   return`#/watch/${card.type==='anime'?'anime':'series'}/${encodeURIComponent(String(card.id))}/${s}/${e}`;
 }
 function watchHref(d){
   if(d.playType!=='tv')return`#/watch/movie/${encodeURIComponent(String(d.id))}`;
-  const prog=Progress.get(d.playId);
+  const prog=progFor(d);
   const s=+prog?.last_season_watched||1,e=+prog?.last_episode_watched||1;
   return`#/watch/${d.type==='anime'?'anime':'series'}/${encodeURIComponent(String(d.id))}/${s}/${e}`;
 }
-
-/* ============================ metadata engines ============================ */
-async function jget(url){
-  const r=await fetch(url);
-  if(!r.ok)throw new Error('Request failed ('+r.status+')');
-  return r.json();
+/* ============ metadata engines ============ */
+async function jget(url){const r=await fetch(url);if(!r.ok)throw new Error('Request failed ('+r.status+')');return r.json()}
+/* stremio addons: extras joined by '&' in one segment — normalize slash-joined input */
+function fixAddonPath(p){
+  p=String(p);const i=p.indexOf('/catalog/');
+  if(i<0)return p;
+  const segs=p.slice(i+9).split('/');
+  if(segs.length<3||segs[1].endsWith('.json'))return p;
+  return p.slice(0,i+9)+segs.slice(0,2).join('/')+'/'+segs.slice(2).join('&');
 }
 const Meta={
   get keyed(){return !!Settings.get().tmdbKey},
-  async c(path){return (await jget(CINEMETA+path)).metas||[]},
-  async k(path){return (await jget(KITSU+path)).metas||[]},
-  async cMeta(cat,id){return (await jget(`${CINEMETA}/meta/${cat}/${id}.json`)).meta},
+  async c(path){return (await jget(CINEMETA+fixAddonPath(path))).metas||[]},
+  async k(path){return (await jget(KITSU+fixAddonPath(path))).metas||[]},
+  async cMeta(cat,id){return (await jget(`${CINEMETA}/meta/${cat}/${encodeURIComponent(id)}.json`)).meta},
   async kMeta(id){return (await jget(`${KITSU}/meta/anime/${encodeURIComponent(id)}.json`)).meta}
 };
 const TMDB={
@@ -375,66 +374,39 @@ const TMDB={
 };
 const tmdb=(p,pr)=>TMDB.get(p,pr);
 const tmdbImg=(p,s='w342')=>TMDB.img(p,s);
-
-/* --- normalizers: everything becomes a card {id,type,title,poster,...} --- */
-function cCard(m){ // cinemeta meta
-  return{id:m.id,type:m.type==='movie'?'movie':'series',title:m.name||m.originalName||'',
-    poster:m.poster||null,
-    backdrop:`https://images.metahub.space/background/large/${m.id}/img`,
-    year:String(m.releaseInfo||'').slice(0,4),score:parseFloat(m.imdbRating)||null,ov:m.description||''};
-}
-function kCard(m){ // kitsu meta
-  return{id:m.id,type:'anime',title:m.name||'',poster:m.poster||null,backdrop:m.background||null,
-    year:String(m.releaseInfo||'').slice(0,4),score:null,ov:''};
-}
-function tCard(x){ // tmdb item
-  const type=x.media_type==='movie'||(!x.media_type&&x.title)?'movie':'series';
+/* ============ card normalizers ============ */
+function cCard(m){return{id:m.id,type:m.type==='movie'?'movie':'series',title:m.name||m.originalName||'',poster:m.poster||null,backdrop:`https://images.metahub.space/background/large/${m.id}/img`,year:String(m.releaseInfo||'').slice(0,4),score:parseFloat(m.imdbRating)||null,ov:m.description||''}}
+function kCard(m){return{id:m.id,type:'anime',title:m.name||'',poster:m.poster||null,backdrop:m.background||null,year:String(m.releaseInfo||'').slice(0,4),score:null,ov:''}}
+function tCard(x){const type=x.media_type==='movie'||(!x.media_type&&x.title)?'movie':'series';
   return{id:String(x.id),type,title:x.title||x.name||'',
     poster:x.poster_path?TMDB.img(x.poster_path,'w342'):null,
     backdrop:x.backdrop_path?TMDB.img(x.backdrop_path,'w780'):null,
     year:String(x.release_date||x.first_air_date||'').slice(0,4),
-    score:x.vote_average>0?x.vote_average:null,ov:x.overview||''};
-}
-
-/* --- detail loading (cached, per source) --- */
-const detailCache=new Map();
-const kitsuResolveCache=new Map();
-const seasonCache=new Map();
-
+    score:x.vote_average>0?x.vote_average:null,ov:x.overview||''}}
+/* ============ detail loaders ============ */
+const detailCache=new Map(),kitsuResolveCache=new Map(),seasonCache=new Map();
 async function resolveKitsu(kitsuId,name){
   if(kitsuResolveCache.has(kitsuId))return kitsuResolveCache.get(kitsuId);
   let res=null;
-  try{ // primary: haglund ARM (same mapper CineStream uses)
-    const num=kitsuId.split(':')[1];
-    const ids=await jget(`${HAGLUND}/ids?source=kitsu&id=${num}`);
-    if(ids&&ids.themoviedb!=null)res={id:String(ids.themoviedb)};
-  }catch(e){}
-  if(!res){ // fallback: find the same show on cinemeta by title (imdb id works with Peachify too)
-    try{
-      const metas=await Meta.c(`/catalog/series/top/search=${encodeURIComponent(name)}.json`);
-      const lower=(name||'').toLowerCase();
-      const hit=metas.find(x=>(x.name||'').toLowerCase()===lower)||metas[0];
-      if(hit)res={id:hit.id};
-    }catch(e){}
-  }
+  try{const num=kitsuId.split(':')[1];const ids=await jget(`${HAGLUND}/ids?source=kitsu&id=${num}`);if(ids&&ids.themoviedb!=null)res={id:String(ids.themoviedb)}}catch(e){}
+  if(!res){try{
+    const metas=await Meta.c(`/catalog/series/top/search=${encodeURIComponent(name)}.json`);
+    const lower=(name||'').toLowerCase();
+    const hit=metas.find(x=>(x.name||'').toLowerCase()===lower)||metas[0];
+    if(hit)res={id:hit.id};
+  }catch(e){}}
   kitsuResolveCache.set(kitsuId,res);
   return res;
 }
-
 async function cinemetaDetail(cat,id){
   const m=await Meta.cMeta(cat,id);
-  const d={
-    id:String(id),playId:String(id),playType:cat==='movie'?'movie':'tv',type:cat==='movie'?'movie':'series',
+  const d={id:String(id),playId:String(id),playType:cat==='movie'?'movie':'tv',type:cat==='movie'?'movie':'series',
     title:m.name||m.originalName||'Untitled',year:String(m.releaseInfo||'').slice(0,4),
-    poster:m.poster||null,
-    backdrop:m.background||`https://images.metahub.space/background/large/${id}/img`,
+    poster:m.poster||null,backdrop:m.background||`https://images.metahub.space/background/large/${id}/img`,
     logo:`https://images.metahub.space/logo/medium/${id}/img`,
-    overview:m.description||'',genres:m.genre||[],
-    cast:(m.cast||[]).slice(0,20).map(n=>({name:n})),
-    runtime:parseInt(m.runtime)||null,score:parseFloat(m.imdbRating)||null,
-    status:null,awards:m.awards||null,trailerKey:(m.trailers||[])[0]?.source||null,
-    episodes:null,seasonList:[],canPlay:true
-  };
+    overview:m.description||'',genres:m.genre||[],cast:(m.cast||[]).slice(0,20).map(n=>({name:n})),
+    runtime:parseInt(m.runtime)||null,score:parseFloat(m.imdbRating)||null,status:null,awards:m.awards||null,
+    trailerKey:(m.trailers||[])[0]?.source||null,episodes:null,seasonList:[],canPlay:true};
   if(cat==='series'){
     const vids=(m.videos||[]).filter(v=>v&&v.season>0&&v.episode>0);
     d.episodes=vids.map(v=>({season:v.season,episode:v.episode,name:v.name||v.title||null,overview:v.overview||v.description||'',thumb:v.thumbnail||null,airDate:v.released||v.firstAired||null}));
@@ -442,57 +414,46 @@ async function cinemetaDetail(cat,id){
   }
   return d;
 }
-
 async function kitsuDetail(id){
   const m=await Meta.kMeta(id);
   const vids=(m.videos||[]).filter(v=>v&&v.season>0&&v.episode>0);
   const resolved=await resolveKitsu(id,m.name||'');
-  return{
-    id:String(id),type:'anime',playId:resolved?resolved.id:null,playType:'tv',
+  return{id:String(id),type:'anime',playId:resolved?resolved.id:null,playType:'tv',
     title:m.name||'Untitled',year:String(m.releaseInfo||'').slice(0,4),
     poster:m.poster||null,backdrop:m.background||null,logo:null,
     overview:(m.description||'').replace(/<br\s*\/?>/gi,' ').replace(/<[^>]+>/g,'').trim(),
-    genres:m.genres||[],cast:[],runtime:parseInt(m.runtime)||null,score:null,
-    status:null,awards:null,trailerKey:null,
+    genres:m.genres||[],cast:[],runtime:parseInt(m.runtime)||null,score:null,status:null,awards:null,trailerKey:null,
     episodes:vids.map(v=>({season:v.season,episode:v.episode,name:v.name||v.title||null,overview:v.overview||'',thumb:v.thumbnail||null,airDate:v.released||v.firstAired||null})),
     seasonList:[...new Set(vids.map(v=>v.season))].sort((a,b)=>a-b).map(s=>({num:s,name:'Season '+s})),
     canPlay:!!resolved,
-    reason:resolved?null:'Could not map this anime to a playable ID (the mapper service may be offline). Try again in a moment.'
-  };
+    reason:resolved?null:'Could not map this anime to a playable ID (the mapper service may be offline). Try again in a moment.'};
 }
-
 async function tmdbDetail(endpoint,id){
   const d=await tmdb(`/${endpoint}/${id}`,{append_to_response:'credits,recommendations,similar,videos,external_ids'});
   const isTv=endpoint==='tv';
   const imdbId=d.external_ids?.imdb_id||null;
-  const res={
-    id:String(id),playId:String(id),playType:isTv?'tv':'movie',type:isTv?'series':'movie',
+  const res={id:String(id),playId:String(id),playType:isTv?'tv':'movie',type:isTv?'series':'movie',
     title:d.title||d.name||'Untitled',year:String(d.release_date||d.first_air_date||'').slice(0,4),
     poster:d.poster_path?TMDB.img(d.poster_path,'w342'):null,
     backdrop:d.backdrop_path?TMDB.img(d.backdrop_path,'w1280'):(d.poster_path?TMDB.img(d.poster_path,'w780'):null),
     logo:imdbId?`https://images.metahub.space/logo/medium/${imdbId}/img`:null,
     overview:d.overview||'',genres:(d.genres||[]).map(g=>g.name),
     cast:(d.credits?.cast||[]).slice(0,20).map(p=>({name:p.name,character:p.character,photo:p.profile_path?TMDB.img(p.profile_path,'w185'):null,personId:p.id})),
-    runtime:d.runtime||d.episode_run_time?.[0]||null,
-    score:d.vote_average>0?d.vote_average:null,
+    runtime:d.runtime||d.episode_run_time?.[0]||null,score:d.vote_average>0?d.vote_average:null,
     status:d.status||null,awards:null,
     trailerKey:(d.videos?.results||[]).find(v=>v.site==='YouTube'&&(v.type==='Trailer'||v.type==='Teaser'))?.key||null,
     episodes:null,seasonList:[],canPlay:true,
     recommendations:[...((d.recommendations?.results)||[]),...((d.similar?.results)||[])].map(tCard).slice(0,24),
-    collection:d.belongs_to_collection||null
-  };
+    collection:d.belongs_to_collection||null};
   if(isTv)res.seasonList=(d.seasons||[]).filter(s=>s.season_number>0).map(s=>({num:s.season_number,name:s.name,episodes:s.episode_count,poster:s.poster_path?TMDB.img(s.poster_path,'w342'):null}));
   return res;
 }
-
-/* keyless + numeric tmdb id (continue-watching records report tmdb ids) */
 async function numericKeylessDetail(type,id){
   const rec=Progress.get(id);
   const title=rec?.title;
   const fallback={id:String(id),type,playId:String(id),playType:type==='movie'?'movie':'tv',
     title:title||'Unknown',year:'',poster:rec?.poster_path?tmdbImg(rec.poster_path,'w342'):null,
-    backdrop:null,logo:null,overview:'',genres:[],cast:[],runtime:null,score:null,
-    status:null,awards:null,trailerKey:null,episodes:null,seasonList:[],canPlay:true,minimal:true};
+    backdrop:null,logo:null,overview:'',genres:[],cast:[],runtime:null,score:null,status:null,awards:null,trailerKey:null,episodes:null,seasonList:[],canPlay:true,minimal:true};
   if(!title)return fallback;
   try{
     const cat=type==='movie'?'movie':'series';
@@ -503,9 +464,8 @@ async function numericKeylessDetail(type,id){
   }catch(e){}
   return fallback;
 }
-
 async function loadDetail(type,idRaw){
-  const id=decodeURIComponent(idRaw||'');
+  const id=safeDecode(idRaw||'');
   const ck=type+':'+id;
   if(!detailCache.has(ck)){
     const p=(async()=>{
@@ -518,20 +478,17 @@ async function loadDetail(type,idRaw){
   }
   return detailCache.get(ck);
 }
-
 async function getEpisodes(d,season){
   if(d.episodes)return d.episodes.filter(e=>e.season===season);
   const k=`${d.id}:${season}`;
   if(seasonCache.has(k))return seasonCache.get(k);
   let eps=[];
-  try{
-    const s=await tmdb(`/tv/${d.id}/season/${season}`);
+  try{const s=await tmdb(`/tv/${d.id}/season/${season}`);
     eps=(s?.episodes||[]).map(e=>({season:e.season_number,episode:e.episode_number,name:e.name,overview:e.overview||'',thumb:e.still_path?TMDB.img(e.still_path,'w300'):null,airDate:e.air_date||null}));
   }catch(e){}
   seasonCache.set(k,eps);
   return eps;
 }
-
 async function recommendedFor(d){
   try{
     if(Array.isArray(d.recommendations)&&d.recommendations.length)return d.recommendations;
@@ -542,8 +499,7 @@ async function recommendedFor(d){
     return metas.filter(x=>x.id!==d.id).map(cCard);
   }catch(e){return[]}
 }
-
-/* ============================ UI primitives ============================ */
+/* ============ UI primitives ============ */
 let toastTimer=null;
 function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2400)}
 function openModal(html){const r=$('#modal-root');r.innerHTML=`<div class="modal-backdrop"></div><div class="modal">${html}</div>`;r.classList.add('open');r.firstElementChild.addEventListener('click',closeModal)}
@@ -553,8 +509,7 @@ function confirmModal(text,onYes){openModal(`<h3>${esc(text)}</h3><div class="mr
 function nameModal(title,initial,onOk){openModal(`<h3>${esc(title)}</h3><input id="nm-in" value="${esc(initial)}" autocomplete="off"><div class="mrow"><button class="btn ghost" data-action="modal-close">Cancel</button><button class="btn primary" id="nm-ok">Save</button></div>`);const i=$('#nm-in');i.focus();$('#nm-ok').onclick=()=>{const v=i.value.trim();if(v){closeModal();onOk(v)}}}
 async function share(){const url=location.href;if(navigator.share){try{await navigator.share({title:document.title,url})}catch{}}else{try{await navigator.clipboard.writeText(url);toast('Link copied')}catch{toast(url)}}}
 function errorBox(err){return`<div class="errbox"><p style="font-size:18px;font-weight:700">😅 Something went wrong</p><p class="muted">${esc(err.message||String(err))}</p><div class="mrow" style="justify-content:center"><button class="btn ghost" data-action="retry">Retry</button><a class="btn primary" href="#/settings">Settings</a></div></div>`}
-
-/* ============================ card components ============================ */
+/* ============ cards ============ */
 function card(x){
   return`<a class="card" href="#/${x.type}/${encodeURIComponent(String(x.id))}"><div class="card-img">${x.poster?`<img loading="lazy" decoding="async" src="${esc(x.poster)}" alt="">`:'<div class="noimg">🎬</div>'}${x.score?`<span class="score">★ ${Number(x.score).toFixed(1)}</span>`:''}</div><div class="card-t">${esc(x.title)}</div>${x.year?`<div class="card-s">${esc(x.year)}</div>`:''}</a>`;
 }
@@ -589,15 +544,14 @@ function actionButtons(d,opts={}){
   const f=Fav.has(d.type,d.id),w=WL.has(d.type,d.id);
   const attrs=`data-id="${esc(String(d.id))}" data-type="${esc(d.type)}" data-title="${esc(d.title)}" data-poster="${esc(d.poster||'')}" data-year="${esc(d.year||'')}"`;
   const play=opts.play!==false&&d.canPlay;
-  return`${opts.play===false?'':(play?`<a class="btn primary" href="${watchHref(d)}">▶ Play</a>`:`<span class="btn ghost" style="opacity:.6">⚠️ No playable source</span>`)}
+  return`${opts.play===false?'':(play?`<a class="btn primary" href="${watchHref(d)}">▶ Play</a>`:'<span class="btn ghost" style="opacity:.6">⚠️ No playable source</span>')}
     ${d.trailerKey?`<button class="btn ghost" data-action="trailer" data-key="${esc(d.trailerKey)}">🎬 Trailer</button>`:''}
     <button class="btn ghost ${f?'on':''}" data-action="fav-toggle" ${attrs}>${f?'♥':'♡'} Favorite</button>
     <button class="btn ghost ${w?'on':''}" data-action="wl-toggle" ${attrs}>${w?'✓':'＋'} Watchlist</button>
     <button class="btn ghost" data-action="group-add" ${attrs}>⊞ Group</button>
     <button class="btn ghost" data-action="share">⤴ Share</button>`;
 }
-
-/* ============================ hero ============================ */
+/* ============ hero ============ */
 function renderHero(container,heroes){
   const h=container.querySelector('.hero');if(!h)return;
   if(!heroes.length){h.remove();return}
@@ -635,15 +589,14 @@ async function heroKeyed(raw){
       bg:imdb?`https://images.metahub.space/background/large/${imdb}/img`:TMDB.img(x.backdrop_path,'w1280')};
   }));
 }
-
-/* ============================ views ============================ */
+/* ============ views ============ */
 function Onboarding(){
   document.title='Welcome — PeachFlix';
   commit(el(`<div class="onboard"><div class="onboard-card">
     <div class="logo" style="font-size:34px">🍑 PeachFlix</div>
     <p class="muted">Movies, series & anime — free, no account, nothing to install.</p>
     <div class="steps">
-      <div>✅ <b>Works right now</b> — catalogs & details load from public Cinemeta &amp; Kitsu APIs. No key needed.</div>
+      <div>✅ <b>Works right now</b> — catalogs &amp; details load from public Cinemeta &amp; Kitsu APIs. No key needed.</div>
       <div>✨ <b>Optional:</b> add a free TMDB API key (<a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener">get one here</a>) to unlock smarter search, recommendations, collections, people pages &amp; filters.</div>
       <div>🍿 Press play — playback runs on the Peachify player.</div>
     </div>
@@ -651,7 +604,6 @@ function Onboarding(){
     <button class="btn primary" data-action="onb-start" style="justify-self:center">Start Watching →</button>
   </div></div>`));
 }
-
 async function HomeView(){
   document.title='PeachFlix — Movies, Series & Anime';
   const skCard='<div class="card"><div class="card-img sk"></div></div>';
@@ -697,13 +649,12 @@ async function HomeView(){
     }
     tmdb('/genre/movie/list').then(g=>addGenreChips((g.genres||[]).map(x=>({id:String(x.id),name:x.name})))).catch(()=>{});
   }else{
-    const[topm,tops,newm,news,bestm,bests,anime]=await Promise.allSettled([
+    const[topm,tops,act,com,bests,anime]=await Promise.allSettled([
       Meta.c('/catalog/movie/top/skip=0.json'),
       Meta.c('/catalog/series/top/skip=0.json'),
-      Meta.c('/catalog/movie/year/skip=0.json'),
-      Meta.c('/catalog/series/year/skip=0.json'),
-      Meta.c('/catalog/movie/imdbRating/skip=0.json'),
-      Meta.c('/catalog/series/imdbRating/skip=0.json'),
+      Meta.c('/catalog/movie/top/genre=Action/skip=0.json'),
+      Meta.c('/catalog/series/top/genre=Comedy/skip=0.json'),
+      Meta.c('/catalog/series/top/skip=100.json'),
       Meta.k('/catalog/anime/kitsu-anime-trending/skip=0.json')]);
     renderHero(c,settled(topm).map(m=>({card:cCard(m),logo:`https://images.metahub.space/logo/medium/${m.id}/img`,bg:`https://images.metahub.space/background/large/${m.id}/img`})).slice(0,5));
     rows.innerHTML='';
@@ -711,10 +662,9 @@ async function HomeView(){
     push('🔥 Popular Movies',settled(topm).map(cCard));
     push('📺 Popular Series',settled(tops).map(cCard));
     push('🎌 Top Anime',settled(anime).map(kCard));
-    push('🆕 New Movies',settled(newm).map(cCard));
-    push('🆕 New Series',settled(news).map(cCard));
-    push('⭐ Top Rated Movies',settled(bestm).map(cCard));
-    push('⭐ Top Rated Series',settled(bests).map(cCard));
+    push('💥 Action Movies',settled(act).map(cCard));
+    push('😂 Comedy Series',settled(com).map(cCard));
+    push('⭐ More Great Series',settled(bests).map(cCard));
     const last=cw.find(r=>String(r.id).startsWith('tt'));
     if(last){
       try{
@@ -727,7 +677,6 @@ async function HomeView(){
     addGenreChips(IMDB_GENRES.map(x=>({id:x,name:x})));
   }
 }
-
 async function BrowseView(type,q){
   const keyed=Meta.keyed;
   const isAnime=type==='anime';
@@ -768,7 +717,7 @@ async function BrowseView(type,q){
     if(state.busy||state.page>=state.total)return;
     state.busy=true;
     try{
-      let items=[],more=false;
+      let items=[];
       if(keyed){
         const sort=c.querySelector('#f-sort').value;
         const p={page:state.page+1,sort_by:sort,include_adult:'false','vote_count.gte':sort==='vote_average.desc'?(tvType==='tv'?150:400):20};
@@ -779,25 +728,22 @@ async function BrowseView(type,q){
         const l=c.querySelector('#f-lang').value;if(l)p.with_original_language=l;
         const r=await tmdb(`/discover/${tvType}`,p);
         state.page=r.page;state.total=Math.min(r.total_pages||1,500);
-        items=(r.results||[]).map(tCard);more=state.page<state.total;
+        items=(r.results||[]).map(tCard);
       }else{
         const skip=state.page*100;
-        let path;
-        if(isAnime)path=`/catalog/anime/kitsu-anime-trending/skip=${skip}.json`;
+        let metas;
+        if(isAnime)metas=await Meta.k(`/catalog/anime/kitsu-anime-trending/skip=${skip}.json`);
         else{
           const cat=type==='movie'?'movie':'series';
-                    const g=state.genres.size>0?[...state.genres].join(','):'';
-          const skip=state.page*100;
-          let path;
-          if(isAnime)path=`/catalog/anime/kitsu-anime-trending/skip=${skip}.json`;
-          else path=`/catalog/${cat}/top/skip=${skip}${g?`&genre=${encodeURIComponent(g)}`:''}.json`;
-          const metas=isAnime?await Meta.k(path):await Meta.c(path);
-          items=metas.map(isAnime?kCard:cCard);
-          state.page++;
-          state.total=state.page+(metas.length>=100?1:0);
+          const g=state.genres.size>0?[...state.genres].join(','):'';
+          metas=await Meta.c(`/catalog/${cat}/top/skip=${skip}${g?`/genre=${encodeURIComponent(g)}`:''}.json`);
         }
-        grid.insertAdjacentHTML('beforeend',items.map(card).join(''));
-        if(!grid.children.length)empty.style.display='block';
+        items=metas.map(isAnime?kCard:cCard);
+        state.page++;
+        state.total=state.page+(metas.length>=100?1:0);
+      }
+      grid.insertAdjacentHTML('beforeend',items.map(card).join(''));
+      if(!grid.children.length)empty.style.display='block';
     }catch(e){toast(e.message)}
     state.busy=false;
   }
@@ -809,60 +755,6 @@ async function BrowseView(type,q){
   cleanup=()=>io.disconnect();
   reset();
 }
-
-/* ── ID aliases: the player reports TMDB ids, but keyless mode opens shows via IMDb (tt…) ids
-      and anime via Kitsu ids. Aliases are learned from PLAYER_EVENT.tmdbId, so resume works
-      no matter which id type we started from. ── */
-const Aliases={
-  KEY:'pf_aliases',
-  all(){return DB.get(this.KEY,{})},
-  add(from,to){from=String(from);to=String(to);if(!from||!to||from===to)return;const a=this.all();a[from]=to;DB.set(this.KEY,a)},
-  resolve(id){const a=this.all();let k=String(id);const seen=new Set();while(a[k]&&!seen.has(k)){seen.add(k);k=a[k]}return k}
-};
-function progFor(d){return Progress.get(Aliases.resolve(String((d&&d.playId)!=null?d.playId:d.id)))}
-
-/* Alias-aware versions of the href/resume helpers (function hoisting: these win over the
-   earlier declarations, so every call site — hero and detail buttons included — uses them). */
-function watchHref(d){
-  if(d.playType!=='tv')return`#/watch/movie/${encodeURIComponent(String(d.id))}`;
-  const prog=progFor(d);
-  const s=+prog?.last_season_watched||1,e=+prog?.last_episode_watched||1;
-  return`#/watch/${d.type==='anime'?'anime':'series'}/${encodeURIComponent(String(d.id))}/${s}/${e}`;
-}
-function cardPlayHref(card){
-  if(card.type==='movie')return`#/watch/movie/${encodeURIComponent(String(card.id))}`;
-  const prog=Progress.get(Aliases.resolve(String(card.id)));
-  const s=+prog?.last_season_watched||1,e=+prog?.last_episode_watched||1;
-  return`#/watch/${card.type==='anime'?'anime':'series'}/${encodeURIComponent(String(card.id))}/${s}/${e}`;
-}
-function resumeFor(d,season,episode){
-  const prog=progFor(d);if(!prog)return 0;
-  if(d.playType==='tv'){
-    const ep=prog.show_progress?.[`s${season}e${episode}`]?.progress;
-    if(ep)return finishOrZero(ep);
-    if(String(prog.last_season_watched)===String(season)&&String(prog.last_episode_watched)===String(episode))return finishOrZero(prog.progress);
-    return 0;
-  }
-  return finishOrZero(prog.progress);
-}
-
-/* Stremio addons (Cinemeta/Kitsu) want catalog extras "&"-joined in ONE path segment
-   (…/top/skip=0&genre=Action.json). Normalize any slash-joined extras before fetching. */
-(function(){
-  function fix(p){
-    p=String(p);
-    const i=p.indexOf('/catalog/');
-    if(i<0)return p;
-    const segs=p.slice(i+9).split('/');
-    if(segs.length<3||segs[1].endsWith('.json'))return p;
-    return p.slice(0,i+9)+segs.slice(0,2).join('/')+'/'+segs.slice(2).join('&');
-  }
-  const oc=Meta.c.bind(Meta),ok=Meta.k.bind(Meta);
-  Meta.c=path=>oc(fix(path));
-  Meta.k=path=>ok(fix(path));
-})();
-
-/* ============================ detail ============================ */
 async function DetailView(type,id){
   const c=el(`<div>
     <div class="d-hero"><div class="sk" style="position:absolute;inset:0"></div><div class="d-fade"></div></div>
@@ -897,7 +789,7 @@ async function DetailView(type,id){
   const rows=c.querySelector('.rows');
   if(d.collection)rows.insertAdjacentHTML('beforeend',`<a class="banner" href="#/collection/${d.collection.id}"><span style="font-size:22px">🎞</span><div><b>${esc(d.collection.name)}</b><div class="muted" style="font-size:13px">View the full collection →</div></div></a>`);
   const cast=(d.cast||[]).filter(p=>p&&p.name);
-  if(cast.length)rows.appendChild(el(`<section class="row"><h2>Cast</h2><div class="row-scroll">${cast.map(p=>`<a class="cast" ${p.personId?`href="#/person/${p.personId}"`:''} ${p.personId?'':'style="pointer-events:none"'}>${p.photo?`<img loading="lazy" src="${esc(p.photo)}" alt="">`:'<div class="noimg">👤</div>'}<div class="nm">${esc(p.name)}</div><div class="ch">${esc(p.character||'')}</div></a>`).join('')}</div></section>`));
+  if(cast.length)rows.appendChild(el(`<section class="row"><h2>Cast</h2><div class="row-scroll">${cast.map(p=>`<a class="cast" ${p.personId?`href="#/person/${p.personId}"`:'style="pointer-events:none"'}>${p.photo?`<img loading="lazy" src="${esc(p.photo)}" alt="">`:'<div class="noimg">👤</div>'}<div class="nm">${esc(p.name)}</div><div class="ch">${esc(p.character||'')}</div></a>`).join('')}</div></section>`));
   if(d.playType==='tv'&&d.seasonList.length){
     rows.appendChild(el(`<section class="row"><h2>Seasons</h2><div class="row-scroll">${d.seasonList.map(s=>`<a class="card" href="#/watch/${d.type==='anime'?'anime':'series'}/${encodeURIComponent(String(d.id))}/${s.num}/1"><div class="card-img">${s.poster?`<img loading="lazy" src="${esc(s.poster)}" alt="">`:'<div class="noimg">🎬</div>'}</div><div class="card-t">${esc(s.name||'Season '+s.num)}</div>${s.episodes?`<div class="card-s">${s.episodes} episodes</div>`:''}</a>`).join('')}</div></section>`));
   }
@@ -905,9 +797,8 @@ async function DetailView(type,id){
   const r1=rowEl(d.type==='anime'?'You might also like':'Recommended',recs);
   if(r1)rows.appendChild(r1);
 }
-
-/* ============================ watch ============================ */
-async function WatchView(type,id,season,episode){
+async function WatchView(type,idRaw,season,episode){
+  const id=safeDecode(idRaw);
   const d=await loadDetail(type,id);
   document.title=`▶ ${d.title} — PeachFlix`;
   const c=el(`<div>
@@ -925,14 +816,12 @@ async function WatchView(type,id,season,episode){
   commit(c);
   const srvRow=c.querySelector('#srv-row'),frame=c.querySelector('#pf-frame');
   let lastTime=0,curServer=Settings.get().server||'',renderEpsFn=null;
-
   if(d.playType==='tv'&&d.seasonList.length&&!d.seasonList.some(x=>x.num===season))season=d.seasonList[0].num;
   let eps=[];
   if(d.canPlay&&d.playType==='tv'){
     eps=d.episodes?d.episodes.filter(e=>e.season===season):await getEpisodes(d,season);
     if(eps.length){const max=Math.max(...eps.map(e=>e.episode));if(episode>max)episode=max;if(episode<1)episode=1}
   }
-
   c.querySelector('.w-title').textContent=`${d.title}${d.playType==='tv'?` — S${season} · E${episode}`:''}`;
   c.querySelector('.w-meta').innerHTML=[
     d.year?`<span>${esc(d.year)}</span>`:null,
@@ -943,14 +832,12 @@ async function WatchView(type,id,season,episode){
   c.querySelector('#w-btns').innerHTML=actionButtons(d,{play:false});
   const ovEl=c.querySelector('#w-ov');
   ovEl.textContent=d.overview||'';ovEl.style.display=d.overview?'':'none';
-
   function applySrc(){
     if(!d.canPlay||!frame)return;
     const st=Settings.get();
     const startAt=lastTime>5?lastTime:resumeFor(d,season,episode);
     frame.src=peachUrl({type:d.playType,id:d.playId,season,episode,startAt,dub:st.dub,sub:st.sub,quality:st.quality,server:curServer,accent:st.accent});
   }
-
   if(!d.canPlay){
     c.querySelector('.player-wrap').innerHTML=`<div style="aspect-ratio:16/9;display:grid;place-items:center;padding:24px;text-align:center"><div><p style="font-weight:700">⚠️ Can't play this title</p><p class="muted" style="font-size:14px;margin-top:6px">${esc(d.reason||'No playable source found.')}</p></div></div>`;
     srvRow.style.display='none';
@@ -966,7 +853,6 @@ async function WatchView(type,id,season,episode){
     });
     applySrc();
   }
-
   if(d.playType==='tv'&&(eps.length||d.seasonList.length)){
     const epsEl=c.querySelector('#w-eps');
     const route=`#/watch/${type}/${encodeURIComponent(String(id))}`;
@@ -991,7 +877,6 @@ async function WatchView(type,id,season,episode){
     };
     renderEpsFn();
   }
-
   const onMsg=ev=>{
     if(ev.origin!==peachOrigin())return;
     const m=ev.data;if(!m||typeof m.type!=='string')return;
@@ -1009,16 +894,12 @@ async function WatchView(type,id,season,episode){
   };
   window.addEventListener('message',onMsg);
   cleanup=()=>window.removeEventListener('message',onMsg);
-
   recommendedFor(d).then(recs=>{
     const r=rowEl(d.type==='anime'?'You might also like':'Recommended',recs);
     if(r)c.querySelector('.rows').appendChild(r);
   }).catch(()=>{});
 }
-
-/* ============================ search ============================ */
 function personCard(p){return`<a class="card" href="#/person/${p.id}"><div class="card-img round">${p.profile_path?`<img loading="lazy" src="${tmdbImg(p.profile_path,'w185')}" alt="">`:'<div class="noimg">👤</div>'}</div><div class="card-t">${esc(p.name)}</div><div class="card-s">${esc(p.known_for_department||'')}</div></a>`}
-
 async function SearchView(q0){
   document.title='Search — PeachFlix';
   const keyed=Meta.keyed;
@@ -1063,8 +944,6 @@ async function SearchView(q0){
   tabs.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;tab=b.dataset.tab;tabs.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));render()});
   if(q0)run(q0);else if(window.innerWidth>899)setTimeout(()=>input.focus(),50);
 }
-
-/* ============================ my stuff / groups ============================ */
 function MineView(){
   document.title='My Stuff — PeachFlix';
   const c=el(`<div><div class="page-h">My Stuff</div>
@@ -1099,7 +978,6 @@ function MineView(){
   c.querySelector('#m-tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;c.querySelectorAll('#m-tabs button').forEach(x=>x.classList.toggle('on',x===b));render(b.dataset.tab)});
   render('cw');
 }
-
 function ListView(uid){
   const g=Groups.get(uid);
   if(!g){location.hash='#/mine';return}
@@ -1113,8 +991,6 @@ function ListView(uid){
     ${g.items.length?`<div class="grid" style="padding-top:14px">${g.items.map(i=>itemCard(i,'group-item-remove',uid)).join('')}</div>`:'<p class="sub-h" style="padding-top:14px">Empty — add titles with the ⊞ Group button on any detail page.</p>'}
   </div>`));
 }
-
-/* ============================ collection / person (rich mode) ============================ */
 async function CollectionView(id){
   const c=el(`<div><div class="page-h sk" style="height:32px;width:50%"></div><div class="grid">${'<div class="card"><div class="card-img sk"></div></div>'.repeat(6)}</div></div>`);
   commit(c);
@@ -1125,7 +1001,6 @@ async function CollectionView(id){
     ${d.overview?`<p class="sub-h">${esc(d.overview)}</p>`:''}
     <div class="grid" style="padding-top:14px">${parts.map(card).join('')}</div>`;
 }
-
 async function PersonView(id){
   const c=el(`<div><div class="page-h sk" style="height:32px;width:40%"></div><div class="grid">${'<div class="card"><div class="card-img sk"></div></div>'.repeat(6)}</div></div>`);
   commit(c);
@@ -1143,8 +1018,6 @@ async function PersonView(id){
     <div class="page-h" style="font-size:18px">Known For</div>
     <div class="grid">${kf.map(card).join('')||'<p class="sub-h">No credits found.</p>'}</div>`;
 }
-
-/* ============================ settings ============================ */
 function SettingsView(){
   document.title='Settings — PeachFlix';
   const s=Settings.get();
@@ -1160,7 +1033,7 @@ function SettingsView(){
         <div class="mrow" style="justify-content:flex-start"><button class="btn ghost sm" data-action="test-key">Test key</button><button class="btn ghost sm" data-action="clear-key">Go keyless</button></div>
       </div>
       <div class="field"><label>Player domain</label><input data-set="playerBase" value="${esc(s.playerBase)}" placeholder="https://peachify.top">
-        <div class="hint">If the player ever moves to a new domain, change it here — like the extension's dynamic urls.json, no redeploy needed.</div></div>
+        <div class="hint">If the player ever moves to a new domain, change it here — no redeploy needed.</div></div>
       <div class="field"><label>Preferred audio (dub)</label><input data-set="dub" value="${esc(s.dub)}" placeholder="e.g. English, Hindi — blank = auto"></div>
       <div class="field"><label>Preferred subtitles</label><input data-set="sub" value="${esc(s.sub)}" placeholder="e.g. English, eng, Arabic — blank = off"></div>
       <div class="field"><label>Preferred quality</label><select data-set="quality">
@@ -1190,8 +1063,7 @@ function SettingsView(){
     if(inp.type==='color')inp.addEventListener('input',()=>Settings.set({accent:inp.value}));
   });
 }
-
-/* ============================ group modal ============================ */
+/* ============ group modal ============ */
 let groupItem=null;
 function groupModal(item){
   groupItem=item;
@@ -1207,8 +1079,7 @@ document.getElementById('modal-root').addEventListener('change',e=>{
   if(!cb||!groupItem)return;
   toast(Groups.toggle(cb.dataset.uid,groupItem)?'Added to group':'Removed from group');
 });
-
-/* ============================ global actions ============================ */
+/* ============ global actions ============ */
 document.addEventListener('click',async e=>{
   const t=e.target.closest('[data-action]');if(!t)return;
   const d=t.dataset;
@@ -1231,15 +1102,14 @@ document.addEventListener('click',async e=>{
     case'trailer':openModal(`<div class="trailer"><iframe src="https://www.youtube.com/embed/${encodeURIComponent(d.key)}?autoplay=1&rel=0" allow="autoplay; fullscreen; encrypted-media" allowfullscreen title="Trailer"></iframe></div><div class="mrow"><button class="btn ghost" data-action="modal-close">Close</button></div>`);break;
     case'modal-close':closeModal();break;
     case'bio-more':{const b=t.closest('.bio-wrap').querySelector('.bio');b.classList.toggle('open');t.textContent=b.classList.contains('open')?'Show less':'Read more';break}
-    case'onb-start':{const k=(document.getElementById('onb-key')?.value||'').trim();if(k)Settings.set({tmdbKey:k});detailCache.clear();toast(k?'Rich mode enabled 🎉':'Enjoy keyless mode!');location.hash='#/';if((location.hash||'#/')==='#/'&&!q_)route();break}
+    case'onb-start':{const k=(document.getElementById('onb-key')?.value||'').trim();if(k){Settings.set({tmdbKey:k});detailCache.clear()}toast(k?'Rich mode enabled 🎉':'Enjoy keyless mode!');location.hash='#/';if((location.hash||'#/')==='#/')route();break}
     case'test-key':{try{await tmdb('/configuration');toast('Key works ✔')}catch(err){toast(err.message)}break}
     case'clear-key':{Settings.set({tmdbKey:''});detailCache.clear();seasonCache.clear();toast('Keyless mode');route();break}
     case'clear-cw':confirmModal('Clear continue-watching history?',()=>{Progress.clear();toast('Cleared');route()});break;
     case'clear-all':confirmModal('Erase ALL local data (favorites, groups, history, settings)?',()=>{['pf_settings','pf_favs','pf_watchlist','pf_groups','peachifyProgress','pf_aliases'].forEach(k=>localStorage.removeItem(k));location.hash='#/';route()});break;
   }
 });
-
-/* ============================ router ============================ */
+/* ============ router ============ */
 function setNav(parts){
   let key='home';
   if(parts[0]==='browse')key=parts[1]==='tv'?'series':(parts[1]==='anime'?'anime':'movies');
@@ -1280,8 +1150,7 @@ async function route(){
     }
   }catch(err){console.error(err);view.innerHTML=errorBox(err)}
 }
-
-/* ============================ boot ============================ */
+/* ============ boot ============ */
 applyAccent(Settings.get().accent);
 window.addEventListener('hashchange',route);
 route();
