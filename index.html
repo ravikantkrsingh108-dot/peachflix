@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0a0b10">
-<meta name="description" content="PeachFlix — movies & series streaming">
+<meta name="description" content="PeachFlix — movies, series & anime streaming">
 <title>PeachFlix</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -21,7 +21,7 @@ img{display:block;max-width:100%}
 ::-webkit-scrollbar{height:8px;width:8px}
 ::-webkit-scrollbar-thumb{background:#2a2f42;border-radius:4px}
 .muted{color:var(--muted)}
-/* ---------- header / tab bar ---------- */
+/* header / tabs */
 #topbar{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:14px;height:var(--header-h);padding:0 18px;background:rgba(10,11,16,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.06)}
 .logo{font-weight:800;font-size:19px;letter-spacing:.3px;background:linear-gradient(120deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap}
 .nav{display:flex;gap:4px;margin-left:6px}
@@ -34,25 +34,27 @@ img{display:block;max-width:100%}
 .iconbtn svg{width:20px;height:20px}
 main{padding-top:var(--header-h);padding-bottom:calc(var(--tab-h) + 18px);min-height:100vh}
 #tabbar{position:fixed;bottom:0;left:0;right:0;z-index:50;display:flex;height:var(--tab-h);background:rgba(10,11,16,.88);backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.06);padding-bottom:env(safe-area-inset-bottom)}
-#tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--muted);font-size:10.5px;font-weight:600}
+#tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--muted);font-size:10px;font-weight:600}
 #tabbar a svg{width:22px;height:22px}
 #tabbar a.active{color:var(--accent)}
-@media(min-width:900px){#tabbar{display:none}}
+@media(min-width:900px){#tabbar{display:none}#hdr-search{display:none}}
 @media(max-width:899px){.nav{display:none}input,select{font-size:16px}}
-/* ---------- hero ---------- */
+/* hero */
 .hero{position:relative;height:min(78vh,640px);min-height:440px;display:flex;align-items:flex-end;overflow:hidden;background:var(--bg2)}
 .hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .55s}
 .hero-fade{position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 4%,rgba(10,11,16,.75) 34%,rgba(10,11,16,.12) 70%)}
 .hero-body{position:relative;padding:0 20px 30px;max-width:640px}
 .hero-badge{display:inline-block;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
 .hero h1{font-size:clamp(26px,6vw,46px);line-height:1.12;font-weight:800;text-shadow:0 2px 18px rgba(0,0,0,.5)}
+.logo-img{display:block;max-height:78px;max-width:min(430px,88%);object-fit:contain;margin-bottom:10px;filter:drop-shadow(0 4px 14px rgba(0,0,0,.55))}
+.d-info .logo-img{max-height:54px;margin-bottom:8px}
 .hero-meta{color:var(--muted);font-size:14px;margin:8px 0 10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .star{color:var(--gold);font-weight:700}
 .hero-ov{color:#cfd4e2;font-size:14px;max-width:54ch;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:16px}
 .hero-dots{position:absolute;right:20px;bottom:14px;display:flex;gap:6px}
 .hero-dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.28);cursor:pointer;transition:.2s}
 .hero-dots i.on{background:var(--accent);width:18px;border-radius:4px}
-/* ---------- buttons ---------- */
+/* buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border-radius:12px;font-weight:700;font-size:14px;border:1px solid transparent;transition:transform .15s,background .2s}
 .btn:active{transform:scale(.96)}
 .btn.primary{background:linear-gradient(120deg,var(--accent),var(--accent2));color:#16100c;box-shadow:0 6px 22px rgba(255,110,90,.35)}
@@ -61,7 +63,7 @@ main{padding-top:var(--header-h);padding-bottom:calc(var(--tab-h) + 18px);min-he
 .btn.sm{padding:8px 13px;font-size:13px;border-radius:10px}
 .btn.on{background:rgba(255,131,89,.16);border-color:var(--accent);color:var(--accent)}
 .danger{color:#ff7b7b}
-/* ---------- rows & cards ---------- */
+/* rows & cards */
 .row{margin:24px 0}
 .row h2{font-size:17px;font-weight:700;padding:0 20px;margin-bottom:12px}
 .row-scroll{display:flex;gap:12px;overflow-x:auto;padding:2px 20px 6px;scroll-snap-type:x proximity;scrollbar-width:none}
@@ -84,14 +86,14 @@ main{padding-top:var(--header-h);padding-bottom:calc(var(--tab-h) + 18px);min-he
 .card:hover .playbadge{opacity:1}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(122px,1fr));gap:18px 12px;padding:0 20px}
 .grid .card{width:auto}
-/* ---------- chips / filters ---------- */
+/* chips / filters */
 .chips{display:flex;gap:8px;overflow-x:auto;padding:4px 20px 10px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex:0 0 auto;padding:7px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--muted);font-size:13px;font-weight:600}
 .chip.on{background:linear-gradient(120deg,var(--accent),var(--accent2));color:#16100c;border-color:transparent}
 .filters{display:flex;gap:10px;flex-wrap:wrap;padding:0 20px;margin:6px 0 16px}
 .filters select{width:auto;min-width:128px;color:var(--muted);font-size:13px}
-/* ---------- pages ---------- */
+/* pages */
 .page-h{padding:22px 20px 8px;font-size:clamp(22px,5vw,30px);font-weight:800}
 .sub-h{padding:0 20px;color:var(--muted);font-size:14px}
 .seg{display:flex;gap:6px;padding:10px 20px 14px;flex-wrap:wrap}
@@ -101,7 +103,7 @@ main{padding-top:var(--header-h);padding-bottom:calc(var(--tab-h) + 18px);min-he
 .foot{padding:44px 20px 10px;color:#565d72;font-size:12px;text-align:center}
 .errbox{padding:60px 20px;text-align:center;display:grid;gap:8px;justify-items:center}
 .mrow{display:flex;gap:10px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
-/* ---------- detail ---------- */
+/* detail */
 .d-hero{position:relative;height:min(52vh,460px);min-height:300px;overflow:hidden;background:var(--bg2)}
 .d-hero img{width:100%;height:100%;object-fit:cover;object-position:top}
 .d-fade{position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 2%,rgba(10,11,16,.72) 40%,rgba(10,11,16,.1))}
@@ -109,6 +111,7 @@ main{padding-top:var(--header-h);padding-bottom:calc(var(--tab-h) + 18px);min-he
 .d-poster{width:150px;border-radius:var(--radius);box-shadow:var(--shadow);flex:0 0 auto}
 @media(max-width:600px){.d-poster{width:110px}}
 .d-info{flex:1;min-width:240px;padding-top:90px}
+.d-info h1,.ttl h1{font-size:clamp(22px,5vw,34px);line-height:1.15;font-weight:800}
 .d-meta{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:14px;margin:8px 0 12px;align-items:center}
 .tag{padding:3px 10px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:12px;color:var(--muted)}
 .d-btns{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}
@@ -118,9 +121,11 @@ main{padding-top:var(--header-h);padding-bottom:calc(var(--tab-h) + 18px);min-he
 .cast .nm{font-size:13px;font-weight:600}
 .cast .ch{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .banner{display:flex;align-items:center;gap:12px;margin:10px 20px;padding:14px 16px;border-radius:var(--radius);background:linear-gradient(120deg,rgba(255,131,89,.14),rgba(255,94,126,.1));border:1px solid rgba(255,131,89,.3)}
-/* ---------- watch ---------- */
+/* watch */
 .player-wrap{position:sticky;top:var(--header-h);z-index:40;background:#000}
 .player-wrap iframe{display:block;width:100%;aspect-ratio:16/9;border:0;max-height:calc(100dvh - var(--header-h));margin:0 auto}
+.srvrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 20px 0}
+.srvrow .lbl{font-size:12px;color:var(--muted);font-weight:700}
 .watch-body{padding:16px 20px 0}
 .w-title{font-size:clamp(20px,4vw,28px);font-weight:800}
 .w-meta{color:var(--muted);font-size:14px;margin:6px 0 12px}
@@ -131,20 +136,22 @@ main{padding-top:var(--header-h);padding-bottom:calc(var(--tab-h) + 18px);min-he
 .ep{position:relative;border-radius:12px;overflow:hidden;background:var(--card);border:1px solid var(--line)}
 .ep.cur{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
 .ep img,.ep-noimg{width:100%;aspect-ratio:16/9;object-fit:cover;background:#0d0f16;display:block}
+.ep.up{opacity:.55}
+.ep.up .ep-n::after{content:" • UPCOMING";color:var(--gold);font-weight:700}
 .ep-body{padding:8px 10px 12px}
 .ep-n{font-size:12px;color:var(--accent);font-weight:700}
 .ep-t{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .epbar{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.18)}
 .epbar i{display:block;height:100%;background:var(--accent)}
 .epnav{display:flex;gap:10px;padding:14px 20px}
-/* ---------- person ---------- */
+/* person */
 .p-head{display:flex;gap:18px;padding:22px 20px;align-items:flex-start;flex-wrap:wrap}
 .p-head img{width:150px;border-radius:16px;box-shadow:var(--shadow)}
 @media(max-width:600px){.p-head img{width:110px}}
 .bio-wrap{max-width:75ch}
 .bio{color:#c8cede;font-size:14px;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;margin-top:10px}
 .bio.open{display:block}
-/* ---------- groups / mine ---------- */
+/* groups */
 .gwrap{padding:6px 20px;display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
 .gwrap>.btn{justify-self:start}
 .gcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px}
@@ -155,16 +162,18 @@ main{padding-top:var(--header-h);padding-bottom:calc(var(--tab-h) + 18px);min-he
 .grow2{display:flex;gap:10px;align-items:center;padding:10px 12px;background:var(--card);border:1px solid var(--line);border-radius:10px;cursor:pointer}
 .grow2 input{width:auto}
 .gnew{display:flex;gap:8px;margin-top:12px}
-/* ---------- settings / onboarding ---------- */
+/* settings */
 .form{max-width:560px;padding:6px 20px 30px;display:grid;gap:16px}
 .field label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:600}
 .hint{font-size:12px;color:var(--muted);margin-top:6px}
 .hint a{color:var(--accent)}
+.engine{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:13px;font-weight:600}
+.engine i{width:8px;height:8px;border-radius:50%;background:#7ddf7d}
 .onboard{min-height:calc(100vh - var(--header-h));display:grid;place-items:center;padding:24px}
-.onboard-card{max-width:460px;width:100%;display:grid;gap:14px}
+.onboard-card{max-width:470px;width:100%;display:grid;gap:14px}
 .steps{text-align:left;color:var(--muted);font-size:14px;display:grid;gap:10px;background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:18px}
 .steps a{color:var(--accent)}
-/* ---------- modal / toast / skeleton ---------- */
+/* modal / toast / skeleton */
 #toast{position:fixed;left:50%;bottom:calc(var(--tab-h) + 22px);transform:translate(-50%,20px);background:#1d2130;border:1px solid var(--line);padding:11px 18px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:100;box-shadow:var(--shadow);max-width:88vw;text-align:center}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 #modal-root{position:fixed;inset:0;z-index:90;display:none}
@@ -185,10 +194,12 @@ main{padding-top:var(--header-h);padding-bottom:calc(var(--tab-h) + 18px);min-he
     <a href="#/" data-nav="home">Home</a>
     <a href="#/browse/movie" data-nav="movies">Movies</a>
     <a href="#/browse/tv" data-nav="series">Series</a>
+    <a href="#/browse/anime" data-nav="anime">Anime</a>
     <a href="#/search" data-nav="search">Search</a>
     <a href="#/mine" data-nav="mine">My Stuff</a>
   </nav>
   <div class="spacer"></div>
+  <a class="iconbtn" id="hdr-search" href="#/search" data-icon="search" aria-label="Search"></a>
   <button class="iconbtn" data-action="goto-settings" data-icon="gear" aria-label="Settings"></button>
 </header>
 
@@ -198,7 +209,7 @@ main{padding-top:var(--header-h);padding-bottom:calc(var(--tab-h) + 18px);min-he
   <a href="#/" data-nav="home" data-icon="home"><span>Home</span></a>
   <a href="#/browse/movie" data-nav="movies" data-icon="film"><span>Movies</span></a>
   <a href="#/browse/tv" data-nav="series" data-icon="tv"><span>Series</span></a>
-  <a href="#/search" data-nav="search" data-icon="search"><span>Search</span></a>
+  <a href="#/browse/anime" data-nav="anime" data-icon="spark"><span>Anime</span></a>
   <a href="#/mine" data-nav="mine" data-icon="heart"><span>My Stuff</span></a>
 </nav>
 
@@ -216,18 +227,29 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const debounce=(fn,ms)=>{let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms)}};
 function el(html){const t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstElementChild}
 function commit(node){view.replaceChildren(node)}
-let cleanup=null,routeId=0;
+const settled=r=>r.status==='fulfilled'?(r.value||[]):[];
+const interleave=(...lists)=>{const out=[],max=Math.max(0,...lists.map(l=>l.length));for(let i=0;i<max;i++)for(const l of lists)if(i<l.length)out.push(l[i]);return out};
+let cleanup=null;
 
 /* ============================ icons ============================ */
 const ICONS={
  home:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.7V21h5v-6h4v6h5V9.7"/>',
  film:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 5v14M17 5v14M3 9.5h4M3 14.5h4M17 9.5h4M17 14.5h4"/>',
  tv:'<rect x="3" y="6" width="18" height="11" rx="2"/><path d="M8 21h8M12 17v4"/>',
+ spark:'<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M18.5 15.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>',
  search:'<circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/>',
  heart:'<path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/>',
  gear:'<path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="16" cy="12" r="2"/><circle cx="7" cy="18" r="2"/>'};
 const icon=n=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
 document.querySelectorAll('[data-icon]').forEach(x=>x.insertAdjacentHTML('afterbegin',icon(x.dataset.icon)));
+
+/* ============================ constants ============================ */
+const DEFAULT_PLAYER='https://peachify.top';
+const CINEMETA='https://v3-cinemeta.strem.io';       // keyless metadata (like CineStream provider)
+const KITSU='https://anime-kitsu.strem.fun';          // keyless anime metadata
+const HAGLUND='https://arm.haglund.dev/api/v2';       // kitsu -> tmdb id mapping
+const IMDB_GENRES=['Action','Adventure','Animation','Biography','Comedy','Crime','Documentary','Drama','Family','Fantasy','History','Horror','Music','Musical','Mystery','Romance','Sci-Fi','Sport','Thriller','War','Western'];
+const LANGS=[['','Any language'],['en','English'],['hi','Hindi'],['ko','Korean'],['ja','Japanese'],['zh','Chinese'],['es','Spanish'],['fr','French'],['de','German'],['ta','Tamil'],['te','Telugu'],['ml','Malayalam']];
 
 /* ============================ storage ============================ */
 const DB={
@@ -235,7 +257,7 @@ const DB={
   set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
 };
 const Settings={
-  get(){return{tmdbKey:'',dub:'',sub:'',quality:'',server:'',accent:'#ff8359',lang:'en-US',...DB.get('pf_settings',{})}},
+  get(){return{tmdbKey:'',dub:'',sub:'',quality:'',server:'',accent:'#ff8359',lang:'en-US',playerBase:DEFAULT_PLAYER,...DB.get('pf_settings',{})}},
   set(patch){const s={...this.get(),...patch};DB.set('pf_settings',s);if(patch.accent)applyAccent(s.accent);return s}
 };
 function applyAccent(hex){if(!hex)return;document.documentElement.style.setProperty('--accent',hex);document.documentElement.style.setProperty('--accent2',hex)}
@@ -264,7 +286,7 @@ const Groups={
 };
 
 /* ============================ Peachify progress ============================ */
-const PEACHIFY_ORIGIN='https://peachify.top';
+function peachOrigin(){try{return new URL(Settings.get().playerBase||DEFAULT_PLAYER).origin}catch{return DEFAULT_PLAYER}}
 const Progress={
   KEY:'peachifyProgress',
   all(){try{return JSON.parse(localStorage.getItem(this.KEY))||{}}catch{return{}}},
@@ -284,9 +306,9 @@ const Progress={
 };
 const notFinished=r=>{if(r.type==='tv')return true;const p=r.progress||{};return!(p.duration>0&&(p.watched||0)/p.duration>=0.95)};
 function finishOrZero(p){if(!p||!p.duration)return 0;return(p.watched||0)/p.duration>=0.95?0:Math.max(0,Math.floor(p.watched||0))}
-function resumeFor(prog,type,season,episode){
-  if(!prog||!prog.progress)return 0;
-  if(type==='tv'){
+function resumeFor(d,season,episode){
+  const prog=Progress.get(d.playId);if(!prog)return 0;
+  if(d.playType==='tv'){
     const ep=prog.show_progress?.[`s${season}e${episode}`]?.progress;
     if(ep)return finishOrZero(ep);
     if(String(prog.last_season_watched)===String(season)&&String(prog.last_episode_watched)===String(episode))return finishOrZero(prog.progress);
@@ -294,12 +316,8 @@ function resumeFor(prog,type,season,episode){
   }
   return finishOrZero(prog.progress);
 }
-function watchHref(type,id,prog){
-  if(type!=='tv')return`#/watch/movie/${id}`;
-  const s=(prog&&+prog.last_season_watched)||1,e=(prog&&+prog.last_episode_watched)||1;
-  return`#/watch/tv/${id}/${s}/${e}`;
-}
 function peachUrl(o){
+  const base=(Settings.get().playerBase||DEFAULT_PLAYER).replace(/\/+$/,'');
   const path=o.type==='tv'?`/embed/tv/${o.id}/${o.season}/${o.episode}`:`/embed/movie/${o.id}`;
   const p=new URLSearchParams();
   if(o.dub)p.set('dub',o.dub);if(o.sub)p.set('sub',o.sub);
@@ -309,16 +327,40 @@ function peachUrl(o){
   if(o.type==='tv'){p.set('autoNext','true');p.set('showNextBtn','true')}
   if(o.accent)p.set('accent',String(o.accent).replace('#',''));
   const qs=p.toString();
-  return PEACHIFY_ORIGIN+path+(qs?`?${qs}`:'');
+  return base+path+(qs?`?${qs}`:'');
+}
+function cardPlayHref(card){
+  if(card.type==='movie')return`#/watch/movie/${encodeURIComponent(String(card.id))}`;
+  const prog=Progress.get(card.id);
+  const s=+prog?.last_season_watched||1,e=+prog?.last_episode_watched||1;
+  return`#/watch/${card.type==='anime'?'anime':'series'}/${encodeURIComponent(String(card.id))}/${s}/${e}`;
+}
+function watchHref(d){
+  if(d.playType!=='tv')return`#/watch/movie/${encodeURIComponent(String(d.id))}`;
+  const prog=Progress.get(d.playId);
+  const s=+prog?.last_season_watched||1,e=+prog?.last_episode_watched||1;
+  return`#/watch/${d.type==='anime'?'anime':'series'}/${encodeURIComponent(String(d.id))}/${s}/${e}`;
 }
 
-/* ============================ TMDB ============================ */
+/* ============================ metadata engines ============================ */
+async function jget(url){
+  const r=await fetch(url);
+  if(!r.ok)throw new Error('Request failed ('+r.status+')');
+  return r.json();
+}
+const Meta={
+  get keyed(){return !!Settings.get().tmdbKey},
+  async c(path){return (await jget(CINEMETA+path)).metas||[]},
+  async k(path){return (await jget(KITSU+path)).metas||[]},
+  async cMeta(cat,id){return (await jget(`${CINEMETA}/meta/${cat}/${id}.json`)).meta},
+  async kMeta(id){return (await jget(`${KITSU}/meta/anime/${encodeURIComponent(id)}.json`)).meta}
+};
 const TMDB={
   base:'https://api.themoviedb.org/3',imgBase:'https://image.tmdb.org/t/p',cache:new Map(),
-  img(path,size='w342'){return path?`${this.imgBase}/${size}${path}`:''},
+  img(path,size='w342'){return path?`${this.imgBase}/${size}${path}`:null},
   async get(path,params={}){
     const key=Settings.get().tmdbKey;
-    if(!key)throw new Error('Add your TMDB API key in Settings first');
+    if(!key)throw new Error('No TMDB key — running in keyless mode');
     const u=new URL(this.base+path);
     u.searchParams.set('api_key',key);
     const lang=Settings.get().lang;if(lang)u.searchParams.set('language',lang);
@@ -332,6 +374,174 @@ const TMDB={
   }
 };
 const tmdb=(p,pr)=>TMDB.get(p,pr);
+const tmdbImg=(p,s='w342')=>TMDB.img(p,s);
+
+/* --- normalizers: everything becomes a card {id,type,title,poster,...} --- */
+function cCard(m){ // cinemeta meta
+  return{id:m.id,type:m.type==='movie'?'movie':'series',title:m.name||m.originalName||'',
+    poster:m.poster||null,
+    backdrop:`https://images.metahub.space/background/large/${m.id}/img`,
+    year:String(m.releaseInfo||'').slice(0,4),score:parseFloat(m.imdbRating)||null,ov:m.description||''};
+}
+function kCard(m){ // kitsu meta
+  return{id:m.id,type:'anime',title:m.name||'',poster:m.poster||null,backdrop:m.background||null,
+    year:String(m.releaseInfo||'').slice(0,4),score:null,ov:''};
+}
+function tCard(x){ // tmdb item
+  const type=x.media_type==='movie'||(!x.media_type&&x.title)?'movie':'series';
+  return{id:String(x.id),type,title:x.title||x.name||'',
+    poster:x.poster_path?TMDB.img(x.poster_path,'w342'):null,
+    backdrop:x.backdrop_path?TMDB.img(x.backdrop_path,'w780'):null,
+    year:String(x.release_date||x.first_air_date||'').slice(0,4),
+    score:x.vote_average>0?x.vote_average:null,ov:x.overview||''};
+}
+
+/* --- detail loading (cached, per source) --- */
+const detailCache=new Map();
+const kitsuResolveCache=new Map();
+const seasonCache=new Map();
+
+async function resolveKitsu(kitsuId,name){
+  if(kitsuResolveCache.has(kitsuId))return kitsuResolveCache.get(kitsuId);
+  let res=null;
+  try{ // primary: haglund ARM (same mapper CineStream uses)
+    const num=kitsuId.split(':')[1];
+    const ids=await jget(`${HAGLUND}/ids?source=kitsu&id=${num}`);
+    if(ids&&ids.themoviedb!=null)res={id:String(ids.themoviedb)};
+  }catch(e){}
+  if(!res){ // fallback: find the same show on cinemeta by title (imdb id works with Peachify too)
+    try{
+      const metas=await Meta.c(`/catalog/series/top/search=${encodeURIComponent(name)}.json`);
+      const lower=(name||'').toLowerCase();
+      const hit=metas.find(x=>(x.name||'').toLowerCase()===lower)||metas[0];
+      if(hit)res={id:hit.id};
+    }catch(e){}
+  }
+  kitsuResolveCache.set(kitsuId,res);
+  return res;
+}
+
+async function cinemetaDetail(cat,id){
+  const m=await Meta.cMeta(cat,id);
+  const d={
+    id:String(id),playId:String(id),playType:cat==='movie'?'movie':'tv',type:cat==='movie'?'movie':'series',
+    title:m.name||m.originalName||'Untitled',year:String(m.releaseInfo||'').slice(0,4),
+    poster:m.poster||null,
+    backdrop:m.background||`https://images.metahub.space/background/large/${id}/img`,
+    logo:`https://images.metahub.space/logo/medium/${id}/img`,
+    overview:m.description||'',genres:m.genre||[],
+    cast:(m.cast||[]).slice(0,20).map(n=>({name:n})),
+    runtime:parseInt(m.runtime)||null,score:parseFloat(m.imdbRating)||null,
+    status:null,awards:m.awards||null,trailerKey:(m.trailers||[])[0]?.source||null,
+    episodes:null,seasonList:[],canPlay:true
+  };
+  if(cat==='series'){
+    const vids=(m.videos||[]).filter(v=>v&&v.season>0&&v.episode>0);
+    d.episodes=vids.map(v=>({season:v.season,episode:v.episode,name:v.name||v.title||null,overview:v.overview||v.description||'',thumb:v.thumbnail||null,airDate:v.released||v.firstAired||null}));
+    d.seasonList=[...new Set(vids.map(v=>v.season))].sort((a,b)=>a-b).map(s=>({num:s,name:'Season '+s}));
+  }
+  return d;
+}
+
+async function kitsuDetail(id){
+  const m=await Meta.kMeta(id);
+  const vids=(m.videos||[]).filter(v=>v&&v.season>0&&v.episode>0);
+  const resolved=await resolveKitsu(id,m.name||'');
+  return{
+    id:String(id),type:'anime',playId:resolved?resolved.id:null,playType:'tv',
+    title:m.name||'Untitled',year:String(m.releaseInfo||'').slice(0,4),
+    poster:m.poster||null,backdrop:m.background||null,logo:null,
+    overview:(m.description||'').replace(/<br\s*\/?>/gi,' ').replace(/<[^>]+>/g,'').trim(),
+    genres:m.genres||[],cast:[],runtime:parseInt(m.runtime)||null,score:null,
+    status:null,awards:null,trailerKey:null,
+    episodes:vids.map(v=>({season:v.season,episode:v.episode,name:v.name||v.title||null,overview:v.overview||'',thumb:v.thumbnail||null,airDate:v.released||v.firstAired||null})),
+    seasonList:[...new Set(vids.map(v=>v.season))].sort((a,b)=>a-b).map(s=>({num:s,name:'Season '+s})),
+    canPlay:!!resolved,
+    reason:resolved?null:'Could not map this anime to a playable ID (the mapper service may be offline). Try again in a moment.'
+  };
+}
+
+async function tmdbDetail(endpoint,id){
+  const d=await tmdb(`/${endpoint}/${id}`,{append_to_response:'credits,recommendations,similar,videos,external_ids'});
+  const isTv=endpoint==='tv';
+  const imdbId=d.external_ids?.imdb_id||null;
+  const res={
+    id:String(id),playId:String(id),playType:isTv?'tv':'movie',type:isTv?'series':'movie',
+    title:d.title||d.name||'Untitled',year:String(d.release_date||d.first_air_date||'').slice(0,4),
+    poster:d.poster_path?TMDB.img(d.poster_path,'w342'):null,
+    backdrop:d.backdrop_path?TMDB.img(d.backdrop_path,'w1280'):(d.poster_path?TMDB.img(d.poster_path,'w780'):null),
+    logo:imdbId?`https://images.metahub.space/logo/medium/${imdbId}/img`:null,
+    overview:d.overview||'',genres:(d.genres||[]).map(g=>g.name),
+    cast:(d.credits?.cast||[]).slice(0,20).map(p=>({name:p.name,character:p.character,photo:p.profile_path?TMDB.img(p.profile_path,'w185'):null,personId:p.id})),
+    runtime:d.runtime||d.episode_run_time?.[0]||null,
+    score:d.vote_average>0?d.vote_average:null,
+    status:d.status||null,awards:null,
+    trailerKey:(d.videos?.results||[]).find(v=>v.site==='YouTube'&&(v.type==='Trailer'||v.type==='Teaser'))?.key||null,
+    episodes:null,seasonList:[],canPlay:true,
+    recommendations:[...((d.recommendations?.results)||[]),...((d.similar?.results)||[])].map(tCard).slice(0,24),
+    collection:d.belongs_to_collection||null
+  };
+  if(isTv)res.seasonList=(d.seasons||[]).filter(s=>s.season_number>0).map(s=>({num:s.season_number,name:s.name,episodes:s.episode_count,poster:s.poster_path?TMDB.img(s.poster_path,'w342'):null}));
+  return res;
+}
+
+/* keyless + numeric tmdb id (continue-watching records report tmdb ids) */
+async function numericKeylessDetail(type,id){
+  const rec=Progress.get(id);
+  const title=rec?.title;
+  const fallback={id:String(id),type,playId:String(id),playType:type==='movie'?'movie':'tv',
+    title:title||'Unknown',year:'',poster:rec?.poster_path?tmdbImg(rec.poster_path,'w342'):null,
+    backdrop:null,logo:null,overview:'',genres:[],cast:[],runtime:null,score:null,
+    status:null,awards:null,trailerKey:null,episodes:null,seasonList:[],canPlay:true,minimal:true};
+  if(!title)return fallback;
+  try{
+    const cat=type==='movie'?'movie':'series';
+    const metas=await Meta.c(`/catalog/${cat}/top/search=${encodeURIComponent(title)}.json`);
+    const lower=title.toLowerCase();
+    const hit=metas.find(x=>(x.name||'').toLowerCase()===lower)||metas.find(x=>(x.name||'').toLowerCase().includes(lower));
+    if(hit)return await cinemetaDetail(cat,hit.id);
+  }catch(e){}
+  return fallback;
+}
+
+async function loadDetail(type,idRaw){
+  const id=decodeURIComponent(idRaw||'');
+  const ck=type+':'+id;
+  if(!detailCache.has(ck)){
+    const p=(async()=>{
+      if(type==='anime')return kitsuDetail(id);
+      if(String(id).startsWith('tt'))return cinemetaDetail(type==='movie'?'movie':'series',id);
+      if(Meta.keyed)return tmdbDetail(type==='series'?'tv':'movie',id);
+      return numericKeylessDetail(type,id);
+    })();
+    detailCache.set(ck,p.catch(e=>{detailCache.delete(ck);throw e}));
+  }
+  return detailCache.get(ck);
+}
+
+async function getEpisodes(d,season){
+  if(d.episodes)return d.episodes.filter(e=>e.season===season);
+  const k=`${d.id}:${season}`;
+  if(seasonCache.has(k))return seasonCache.get(k);
+  let eps=[];
+  try{
+    const s=await tmdb(`/tv/${d.id}/season/${season}`);
+    eps=(s?.episodes||[]).map(e=>({season:e.season_number,episode:e.episode_number,name:e.name,overview:e.overview||'',thumb:e.still_path?TMDB.img(e.still_path,'w300'):null,airDate:e.air_date||null}));
+  }catch(e){}
+  seasonCache.set(k,eps);
+  return eps;
+}
+
+async function recommendedFor(d){
+  try{
+    if(Array.isArray(d.recommendations)&&d.recommendations.length)return d.recommendations;
+    if(d.type==='anime')return(await Meta.k('/catalog/anime/kitsu-anime-trending/skip=0.json')).map(kCard);
+    const g=(d.genres||[])[0];if(!g)return[];
+    const cat=d.type==='movie'?'movie':'series';
+    const metas=await Meta.c(`/catalog/${cat}/top/genre=${encodeURIComponent(g)}/skip=0.json`);
+    return metas.filter(x=>x.id!==d.id).map(cCard);
+  }catch(e){return[]}
+}
 
 /* ============================ UI primitives ============================ */
 let toastTimer=null;
@@ -346,87 +556,68 @@ function errorBox(err){return`<div class="errbox"><p style="font-size:18px;font-
 
 /* ============================ card components ============================ */
 function card(x){
-  const type=x.media_type||(x.title?'movie':'tv');
-  const title=x.title||x.name||'';
-  const year=(x.release_date||x.first_air_date||'').slice(0,4);
-  const img=x.poster_path?TMDB.img(x.poster_path,'w342'):null;
-  const score=x.vote_average?x.vote_average.toFixed(1):'';
-  return`<a class="card" href="#/${type}/${x.id}"><div class="card-img">${img?`<img loading="lazy" decoding="async" src="${img}" alt="">`:'<div class="noimg">🎬</div>'}${score?`<span class="score">★ ${score}</span>`:''}</div><div class="card-t">${esc(title)}</div>${year?`<div class="card-s">${esc(year)}</div>`:''}</a>`;
+  return`<a class="card" href="#/${x.type}/${encodeURIComponent(String(x.id))}"><div class="card-img">${x.poster?`<img loading="lazy" decoding="async" src="${esc(x.poster)}" alt="">`:'<div class="noimg">🎬</div>'}${x.score?`<span class="score">★ ${Number(x.score).toFixed(1)}</span>`:''}</div><div class="card-t">${esc(x.title)}</div>${x.year?`<div class="card-s">${esc(x.year)}</div>`:''}</a>`;
 }
-function personCard(p){return`<a class="card" href="#/person/${p.id}"><div class="card-img round">${p.profile_path?`<img loading="lazy" src="${TMDB.img(p.profile_path,'w185')}" alt="">`:'<div class="noimg">👤</div>'}</div><div class="card-t">${esc(p.name)}</div><div class="card-s">${esc(p.known_for_department||'')}</div></a>`}
 function cwCard(rec){
   const p=rec.progress||{};
   const pct=p.duration>0?Math.min(100,Math.round((p.watched||0)/p.duration*100)):0;
   const tv=rec.type==='tv';
+  const s=+rec.last_season_watched||1,e=+rec.last_episode_watched||1;
   return`<div class="card">
-    <a href="${watchHref(tv?'tv':'movie',rec.id,rec)}"><div class="card-img">
-      ${rec.poster_path?`<img loading="lazy" src="${TMDB.img(rec.poster_path,'w342')}" alt="">`:'<div class="noimg">🎬</div>'}
+    <a href="#/watch/${tv?'series':'movie'}/${encodeURIComponent(String(rec.id))}/${tv?s:1}/${tv?e:1}"><div class="card-img">
+      ${rec.poster_path?`<img loading="lazy" src="${tmdbImg(rec.poster_path,'w342')}" alt="">`:'<div class="noimg">🎬</div>'}
       <span class="playbadge">▶</span><div class="cwbar"><i style="width:${pct}%"></i></div>
     </div></a>
     <button class="cwclose" data-action="cw-remove" data-id="${esc(String(rec.id))}" aria-label="Remove">✕</button>
     <div class="card-t">${esc(rec.title||'Untitled')}</div>
-    <div class="card-s">${tv?`S${rec.last_season_watched||1}·E${rec.last_episode_watched||1} · `:''}${pct}%</div>
+    <div class="card-s">${tv?`S${s}·E${e} · `:''}${pct}%</div>
   </div>`;
 }
 function itemCard(i,action,uid){
   return`<div class="card">
-    <a href="#/${esc(i.type)}/${esc(String(i.id))}"><div class="card-img">${i.poster?`<img loading="lazy" src="${TMDB.img(i.poster,'w342')}" alt="">`:'<div class="noimg">🎬</div>'}</div></a>
+    <a href="#/${esc(i.type)}/${encodeURIComponent(String(i.id))}"><div class="card-img">${i.poster?`<img loading="lazy" src="${esc(i.poster)}" alt="">`:'<div class="noimg">🎬</div>'}</div></a>
     <button class="card-x" data-action="${action}" data-id="${esc(String(i.id))}" data-type="${esc(i.type)}" ${uid?`data-uid="${esc(uid)}"`:''} aria-label="Remove">✕</button>
     <div class="card-t">${esc(i.title)}</div><div class="card-s">${esc(i.year||'')}</div>
   </div>`;
 }
 function rowEl(title,items){
-  const list=(items||[]).filter(x=>x&&x.media_type!=='person'&&x.poster_path!=null);
+  const list=(items||[]).filter(x=>x&&x.poster);
   if(!list.length)return null;
   return el(`<section class="row"><h2>${esc(title)}</h2><div class="row-scroll">${list.map(card).join('')}</div></section>`);
 }
-function actionButtons(item,trailerKey,opts={}){
-  const f=Fav.has(item.type,item.id),w=WL.has(item.type,item.id);
-  const attrs=`data-id="${esc(String(item.id))}" data-type="${esc(item.type)}" data-title="${esc(item.title)}" data-poster="${esc(item.poster||'')}" data-year="${esc(item.year||'')}"`;
-  return`${opts.play!==false?`<a class="btn primary" href="${watchHref(item.type,item.id,Progress.get(item.id))}">▶ Play</a>`:''}
-    ${trailerKey?`<button class="btn ghost" data-action="trailer" data-key="${esc(trailerKey)}">🎬 Trailer</button>`:''}
+function actionButtons(d,opts={}){
+  const f=Fav.has(d.type,d.id),w=WL.has(d.type,d.id);
+  const attrs=`data-id="${esc(String(d.id))}" data-type="${esc(d.type)}" data-title="${esc(d.title)}" data-poster="${esc(d.poster||'')}" data-year="${esc(d.year||'')}"`;
+  const play=opts.play!==false&&d.canPlay;
+  return`${opts.play===false?'':(play?`<a class="btn primary" href="${watchHref(d)}">▶ Play</a>`:`<span class="btn ghost" style="opacity:.6">⚠️ No playable source</span>`)}
+    ${d.trailerKey?`<button class="btn ghost" data-action="trailer" data-key="${esc(d.trailerKey)}">🎬 Trailer</button>`:''}
     <button class="btn ghost ${f?'on':''}" data-action="fav-toggle" ${attrs}>${f?'♥':'♡'} Favorite</button>
     <button class="btn ghost ${w?'on':''}" data-action="wl-toggle" ${attrs}>${w?'✓':'＋'} Watchlist</button>
     <button class="btn ghost" data-action="group-add" ${attrs}>⊞ Group</button>
     <button class="btn ghost" data-action="share">⤴ Share</button>`;
 }
 
-/* ============================ views ============================ */
-function Onboarding(){
-  document.title='Welcome — PeachFlix';
-  commit(el(`<div class="onboard"><div class="onboard-card">
-    <div class="logo" style="font-size:34px">🍑 PeachFlix</div>
-    <p class="muted">Movies & series on your phone — free, no account needed.</p>
-    <div class="steps">
-      <div><b>1.</b> Get a free API key at <a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener">themoviedb.org/settings/api</a> — copy the <b>API Key (v3)</b>.</div>
-      <div><b>2.</b> Paste it below. It's stored only on this device.</div>
-      <div><b>3.</b> Press play. 🍿</div>
-    </div>
-    <input id="onb-key" type="text" placeholder="TMDB API key (v3)" autocomplete="off">
-    <button class="btn primary" data-action="onb-save" style="justify-self:center">Start Watching</button>
-  </div></div>`));
-}
-
+/* ============================ hero ============================ */
 function renderHero(container,heroes){
   const h=container.querySelector('.hero');if(!h)return;
   if(!heroes.length){h.remove();return}
   h.classList.remove('sk');
   h.innerHTML=`<img class="hero-bg" alt=""><div class="hero-fade"></div>
-    <div class="hero-body"><div class="hero-badge"></div><h1></h1><div class="hero-meta"></div><p class="hero-ov"></p><div class="hero-btns"></div></div>
+    <div class="hero-body"><div class="hero-badge"></div><div class="ttl"></div><div class="hero-meta"></div><p class="hero-ov"></p><div class="hero-btns"></div></div>
     <div class="hero-dots">${heroes.map((_,i)=>`<i data-i="${i}"></i>`).join('')}</div>`;
-  const bg=h.querySelector('.hero-bg'),badge=h.querySelector('.hero-badge'),tEl=h.querySelector('h1'),
+  const bg=h.querySelector('.hero-bg'),badge=h.querySelector('.hero-badge'),ttl=h.querySelector('.ttl'),
         mEl=h.querySelector('.hero-meta'),oEl=h.querySelector('.hero-ov'),bEl=h.querySelector('.hero-btns'),
         dots=h.querySelectorAll('.hero-dots i');
   let idx=0,timer=null;
   const set=i=>{
-    idx=i;const x=heroes[i];const type=x.media_type||'movie';
+    idx=i;const x=heroes[i];const cd=x.card||x;
     bg.style.opacity=0;
-    setTimeout(()=>{bg.src=TMDB.img(x.backdrop_path,'w1280');bg.onload=()=>{bg.style.opacity=1}},220);
-    badge.textContent=`#${i+1} Trending · ${type==='tv'?'Series':'Movie'}`;
-    tEl.textContent=x.title||x.name||'';
-    mEl.innerHTML=`${x.vote_average?`<span class="star">★ ${x.vote_average.toFixed(1)}</span>`:''}<span>${esc((x.release_date||x.first_air_date||'').slice(0,4))}</span>`;
-    oEl.textContent=x.overview||'';
-    bEl.innerHTML=`<a class="btn primary" href="${watchHref(type,x.id,Progress.get(x.id))}">▶ Play</a><a class="btn ghost" href="#/${type}/${x.id}">ⓘ More Info</a>`;
+    setTimeout(()=>{const next=x.bg||cd.poster||'';if(bg.src===next){bg.style.opacity=1}else{bg.onload=()=>{bg.style.opacity=1};bg.src=next}},220);
+    badge.textContent=`#${i+1} · ${cd.type==='series'?'Series':cd.type==='anime'?'Anime':'Movie'}`;
+    ttl.innerHTML=`${x.logo?`<img class="logo-img" src="${esc(x.logo)}" alt="" onerror="var h=this.nextElementSibling;this.remove();if(h)h.style.display=''">`:''}<h1 style="${x.logo?'display:none':''}">${esc(cd.title)}</h1>`;
+    mEl.innerHTML=`${cd.score?`<span class="star">★ ${Number(cd.score).toFixed(1)}</span>`:''}${cd.year?`<span>${esc(cd.year)}</span>`:''}`;
+    oEl.textContent=cd.ov||'';
+    bEl.innerHTML=`<a class="btn primary" href="${cardPlayHref(cd)}">▶ Play</a><a class="btn ghost" href="#/${cd.type}/${encodeURIComponent(String(cd.id))}">ⓘ More Info</a>`;
     dots.forEach((d,k)=>d.classList.toggle('on',k===i));
   };
   const restart=()=>{clearInterval(timer);timer=setInterval(()=>set((idx+1)%heroes.length),8000)};
@@ -434,457 +625,165 @@ function renderHero(container,heroes){
   h.querySelector('.hero-dots').addEventListener('click',e=>{const d=e.target.closest('i');if(!d)return;set(+d.dataset.i);restart()});
   cleanup=()=>clearInterval(timer);
 }
+async function heroKeyed(raw){
+  const items=raw.filter(x=>x&&x.media_type!=='person'&&x.backdrop_path).slice(0,5);
+  return Promise.all(items.map(async x=>{
+    let imdb=null;
+    try{const e=await tmdb(`/${x.media_type}/${x.id}/external_ids`);imdb=e.imdb_id||null}catch(e){}
+    return{card:tCard(x),
+      logo:imdb?`https://images.metahub.space/logo/medium/${imdb}/img`:null,
+      bg:imdb?`https://images.metahub.space/background/large/${imdb}/img`:TMDB.img(x.backdrop_path,'w1280')};
+  }));
+}
+
+/* ============================ views ============================ */
+function Onboarding(){
+  document.title='Welcome — PeachFlix';
+  commit(el(`<div class="onboard"><div class="onboard-card">
+    <div class="logo" style="font-size:34px">🍑 PeachFlix</div>
+    <p class="muted">Movies, series & anime — free, no account, nothing to install.</p>
+    <div class="steps">
+      <div>✅ <b>Works right now</b> — catalogs & details load from public Cinemeta &amp; Kitsu APIs. No key needed.</div>
+      <div>✨ <b>Optional:</b> add a free TMDB API key (<a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener">get one here</a>) to unlock smarter search, recommendations, collections, people pages &amp; filters.</div>
+      <div>🍿 Press play — playback runs on the Peachify player.</div>
+    </div>
+    <input id="onb-key" type="text" placeholder="TMDB API key (optional)" autocomplete="off">
+    <button class="btn primary" data-action="onb-start" style="justify-self:center">Start Watching →</button>
+  </div></div>`));
+}
 
 async function HomeView(){
-  document.title='PeachFlix — Movies & Series';
+  document.title='PeachFlix — Movies, Series & Anime';
   const skCard='<div class="card"><div class="card-img sk"></div></div>';
   const skRow=`<section class="row"><h2 class="sk" style="width:140px;height:16px;margin:0 20px 12px"></h2><div class="row-scroll">${skCard.repeat(7)}</div></section>`;
-  const c=el(`<div><div class="hero sk"></div><div class="rows">${skRow}${skRow}${skRow}</div><p class="foot">Metadata by TMDB · Player by Peachify</p></div>`);
+  const c=el(`<div><div class="hero sk"></div><div class="rows">${skRow}${skRow}${skRow}</div><p class="foot">Metadata by ${Meta.keyed?'TMDB':'Cinemeta & Kitsu'} · Player by Peachify</p></div>`);
   commit(c);
   const rows=c.querySelector('.rows');
-  const[trend,theaters,onair,popm,popt,topm]=await Promise.allSettled([
-    tmdb('/trending/all/week'),tmdb('/movie/now_playing'),tmdb('/tv/on_the_air'),
-    tmdb('/movie/popular'),tmdb('/tv/popular'),tmdb('/movie/top_rated')]);
-  const val=r=>r.status==='fulfilled'?(r.value.results||[]):[];
-  renderHero(c,val(trend).filter(x=>x.media_type!=='person'&&x.backdrop_path).slice(0,5));
-  rows.innerHTML='';
   const cw=Progress.list().filter(notFinished);
-  const cwRowEl=cw.length?el(`<section class="row"><h2>▶ Continue Watching</h2><div class="row-scroll">${cw.map(cwCard).join('')}</div></section>`):null;
-  if(cwRowEl)rows.appendChild(cwRowEl);
+  const cwRowEl=()=>cw.length?el(`<section class="row"><h2>▶ Continue Watching</h2><div class="row-scroll">${cw.map(cwCard).join('')}</div></section>`):null;
   const push=(t,l)=>{const r=rowEl(t,l);if(r)rows.appendChild(r)};
-  push('🔥 Trending This Week',val(trend));
-  push('🎬 In Theaters Now',val(theaters));
-  push('📺 New TV Episodes',val(onair));
-  push('Popular Movies',val(popm));
-  push('Popular Series',val(popt));
-  push('⭐ Top Rated Movies',val(topm));
-  const last=cw[0];
-  if(last&&/^\d+$/.test(String(last.id))&&(last.type==='movie'||last.type==='tv')){
-    tmdb(`/${last.type}/${last.id}/recommendations`).then(r=>{
-      const row=rowEl(`Because you watched “${last.title}”`,r.results);
-      if(row)rows.insertBefore(row,(cwRowEl&&cwRowEl.nextSibling)||rows.firstChild);
-    }).catch(()=>{});
-  }
-  const fav0=Fav.list()[0];
-  if(fav0)tmdb(`/${fav0.type}/${fav0.id}/recommendations`).then(r=>{
-    const row=rowEl(`More like “${fav0.title}”`,r.results);if(row)rows.appendChild(row);
-  }).catch(()=>{});
-  tmdb('/genre/movie/list').then(g=>{
-    const chips=el(`<div class="chips" style="padding-top:6px">${g.genres.slice(0,14).map(x=>`<a class="chip" href="#/browse/movie?genre=${x.id}">${esc(x.name)}</a>`).join('')}</div>`);
+  const addGenreChips=genres=>{
+    if(!genres||!genres.length)return;
+    const chips=el(`<div class="chips" style="padding-top:6px">${genres.slice(0,16).map(g=>`<a class="chip" href="#/browse/movie?genre=${encodeURIComponent(g.id)}">${esc(g.name)}</a>`).join('')}</div>`);
     rows.parentElement.insertBefore(chips,rows);
-  }).catch(()=>{});
+  };
+  if(Meta.keyed){
+    const[trend,theaters,onair,popm,popt,topm,anime]=await Promise.allSettled([
+      tmdb('/trending/all/week'),tmdb('/movie/now_playing'),tmdb('/tv/on_the_air'),
+      tmdb('/movie/popular'),tmdb('/tv/popular'),tmdb('/movie/top_rated'),
+      Meta.k('/catalog/anime/kitsu-anime-trending/skip=0.json')]);
+    renderHero(c,await heroKeyed(settled(trend)));
+    rows.innerHTML='';
+    const cwEl=cwRowEl();if(cwEl)rows.appendChild(cwEl);
+    push('🔥 Trending This Week',settled(trend).map(tCard));
+    push('🎬 In Theaters Now',settled(theaters).map(tCard));
+    push('📺 New TV Episodes',settled(onair).map(tCard));
+    push('🎌 Top Anime',settled(anime).map(kCard));
+    push('Popular Movies',settled(popm).map(tCard));
+    push('Popular Series',settled(popt).map(tCard));
+    push('⭐ Top Rated Movies',settled(topm).map(tCard));
+    const last=cw[0];
+    if(last&&/^\d+$/.test(String(last.id))){
+      tmdb(`/${last.type==='tv'?'tv':'movie'}/${last.id}/recommendations`).then(r=>{
+        const row=rowEl(`Because you watched “${last.title}”`,(r.results||[]).map(tCard));
+        if(row)rows.insertBefore(row,rows.children[1]||null);
+      }).catch(()=>{});
+    }
+    const fav0=Fav.list()[0];
+    if(fav0&&fav0.type!=='anime'){
+      tmdb(`/${fav0.type==='series'?'tv':'movie'}/${fav0.id}/recommendations`).then(r=>{
+        const row=rowEl(`More like “${fav0.title}”`,(r.results||[]).map(tCard));if(row)rows.appendChild(row);
+      }).catch(()=>{});
+    }
+    tmdb('/genre/movie/list').then(g=>addGenreChips((g.genres||[]).map(x=>({id:String(x.id),name:x.name})))).catch(()=>{});
+  }else{
+    const[topm,tops,newm,news,bestm,bests,anime]=await Promise.allSettled([
+      Meta.c('/catalog/movie/top/skip=0.json'),
+      Meta.c('/catalog/series/top/skip=0.json'),
+      Meta.c('/catalog/movie/year/skip=0.json'),
+      Meta.c('/catalog/series/year/skip=0.json'),
+      Meta.c('/catalog/movie/imdbRating/skip=0.json'),
+      Meta.c('/catalog/series/imdbRating/skip=0.json'),
+      Meta.k('/catalog/anime/kitsu-anime-trending/skip=0.json')]);
+    renderHero(c,settled(topm).map(m=>({card:cCard(m),logo:`https://images.metahub.space/logo/medium/${m.id}/img`,bg:`https://images.metahub.space/background/large/${m.id}/img`})).slice(0,5));
+    rows.innerHTML='';
+    const cwEl=cwRowEl();if(cwEl)rows.appendChild(cwEl);
+    push('🔥 Popular Movies',settled(topm).map(cCard));
+    push('📺 Popular Series',settled(tops).map(cCard));
+    push('🎌 Top Anime',settled(anime).map(kCard));
+    push('🆕 New Movies',settled(newm).map(cCard));
+    push('🆕 New Series',settled(news).map(cCard));
+    push('⭐ Top Rated Movies',settled(bestm).map(cCard));
+    push('⭐ Top Rated Series',settled(bests).map(cCard));
+    const last=cw.find(r=>String(r.id).startsWith('tt'));
+    if(last){
+      try{
+        const cat=last.type==='tv'?'series':'movie';
+        const m=await Meta.cMeta(cat,String(last.id));
+        const g=(m.genre||[])[0];
+        if(g)push(`More ${g}`,(await Meta.c(`/catalog/${cat}/top/genre=${encodeURIComponent(g)}/skip=0.json`)).map(cCard));
+      }catch(e){}
+    }
+    addGenreChips(IMDB_GENRES.map(x=>({id:x,name:x})));
+  }
 }
 
 async function BrowseView(type,q){
-  const isTv=type==='tv';
-  document.title=(isTv?'TV Series':'Movies')+' — PeachFlix';
-  const c=el(`<div>
-    <div class="page-h">${isTv?'TV Series':'Movies'}</div>
-    <div class="chips" id="g-chips"></div>
+  const keyed=Meta.keyed;
+  const isAnime=type==='anime';
+  const tvType=type==='movie'?'movie':'tv';
+  document.title=(isAnime?'Anime':type==='movie'?'Movies':'TV Series')+' — PeachFlix';
+  const filterHtml=keyed?`
     <div class="filters">
       <select id="f-sort">
         <option value="popularity.desc">Most Popular</option>
         <option value="vote_average.desc">Highest Rated</option>
-        <option value="${isTv?'first_air_date.desc':'primary_release_date.desc'}">Newest First</option>
-        ${isTv?'':'<option value="revenue.desc">Biggest Box Office</option>'}
+        <option value="${tvType==='tv'?'first_air_date.desc':'primary_release_date.desc'}">Newest First</option>
+        ${tvType==='movie'?'<option value="revenue.desc">Biggest Box Office</option>':''}
       </select>
       <select id="f-year"><option value="">Any year</option>${(()=>{const y=new Date().getFullYear();let h='';for(let i=y;i>=1970;i--)h+=`<option value="${i}">${i}</option>`;return h})()}</select>
       <select id="f-rate"><option value="">Any rating</option><option value="7">7+ ★</option><option value="8">8+ ★</option></select>
-      <select id="f-lang">${[['','Any language'],['en','English'],['hi','Hindi'],['ko','Korean'],['ja','Japanese'],['zh','Chinese'],['es','Spanish'],['fr','French'],['de','German'],['ta','Tamil'],['te','Telugu'],['ml','Malayalam']].map(([v,n])=>`<option value="${v}">${n}</option>`).join('')}</select>
-    </div>
+      <select id="f-lang">${LANGS.map(([v,n])=>`<option value="${v}">${n}</option>`).join('')}</select>
+    </div>`:(isAnime?'':`<p class="sub-h" style="padding:2px 20px 12px">💡 Add a free TMDB key in <a href="#/settings" style="color:var(--accent)">Settings</a> for year / rating / language filters and sorting.</p>`);
+  const c=el(`<div>
+    <div class="page-h">${isAnime?'🎌 Anime':type==='movie'?'Movies':'TV Series'}</div>
+    <div class="chips" id="g-chips"></div>
+    ${filterHtml}
     <div class="grid" id="b-grid"></div>
     <div id="b-sentinel" style="height:10px"></div>
     <p class="sub-h" id="b-empty" style="display:none;padding-top:14px">No results with these filters.</p>
   </div>`);
   commit(c);
-  const genres=await tmdb(`/genre/${type}/list`).catch(()=>({genres:[]}));
-  const chips=c.querySelector('#g-chips');
+  const grid=c.querySelector('#b-grid'),empty=c.querySelector('#b-empty'),chips=c.querySelector('#g-chips');
   const state={genres:new Set(),page:0,total:1,busy:false};
   const pre=(q.get('genre')||'').split(',').filter(Boolean);
-  chips.innerHTML=genres.genres.map(g=>`<button class="chip ${pre.includes(String(g.id))?'on':''}" data-g="${g.id}">${esc(g.name)}</button>`).join('');
   pre.forEach(x=>state.genres.add(x));
-  const grid=c.querySelector('#b-grid'),empty=c.querySelector('#b-empty');
+  if(!isAnime){
+    let genres=[];
+    if(keyed){try{genres=((await tmdb(`/genre/${tvType}/list`)).genres||[]).map(g=>({id:String(g.id),name:g.name}))}catch(e){}}
+    else genres=IMDB_GENRES.map(g=>({id:g,name:g}));
+    chips.innerHTML=genres.map(g=>`<button class="chip ${pre.includes(g.id)?'on':''}" data-g="${esc(g.id)}">${esc(g.name)}</button>`).join('');
+  }
   async function loadMore(){
     if(state.busy||state.page>=state.total)return;
     state.busy=true;
-    const sort=c.querySelector('#f-sort').value;
-    const p={page:state.page+1,sort_by:sort,include_adult:'false','vote_count.gte':sort==='vote_average.desc'?(isTv?150:400):20};
-    if(state.genres.size)p.with_genres=[...state.genres].join(',');
-    const y=c.querySelector('#f-year').value;if(y)p[isTv?'first_air_date_year':'primary_release_year']=y;
-    const r2=c.querySelector('#f-rate').value;if(r2)p['vote_average.gte']=r2;
-    const l=c.querySelector('#f-lang').value;if(l)p.with_original_language=l;
     try{
-      const r=await tmdb(`/discover/${type}`,p);
-      state.page=r.page;state.total=Math.min(r.total_pages||1,500);
-      grid.insertAdjacentHTML('beforeend',(r.results||[]).map(card).join(''));
-      if(!grid.children.length)empty.style.display='block';
-    }catch(e){toast(e.message)}
-    state.busy=false;
-  }
-  function reset(){state.page=0;state.total=1;grid.innerHTML='';empty.style.display='none';loadMore()}
-  chips.addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;b.classList.toggle('on');const g=String(b.dataset.g);state.genres.has(g)?state.genres.delete(g):state.genres.add(g);reset()});
-  ['#f-sort','#f-year','#f-rate','#f-lang'].forEach(s=>c.querySelector(s).addEventListener('change',reset));
-  const io=new IntersectionObserver(en=>{if(en[0].isIntersecting)loadMore()},{rootMargin:'600px'});
-  io.observe(c.querySelector('#b-sentinel'));
-  cleanup=()=>io.disconnect();
-  reset();
-}
-
-async function DetailView(type,id){
-  const skCard='<div class="card"><div class="card-img sk"></div></div>';
-  const c=el(`<div>
-    <div class="d-hero"><div class="sk" style="position:absolute;inset:0"></div><div class="d-fade"></div></div>
-    <div class="d-head">
-      <img class="d-poster sk" alt="">
-      <div class="d-info">
-        <h1 class="page-title sk" style="height:30px;width:70%;padding:0"></h1>
-        <div class="d-meta sk" style="height:20px;width:50%"></div>
-        <div class="d-btns" id="d-btns"></div>
-      </div>
-    </div>
-    <p class="d-ov sk" style="height:60px"></p>
-    <div class="rows"></div>
-  </div>`);
-  commit(c);
-  const d=await tmdb(`/${type}/${id}`,{append_to_response:'credits,recommendations,similar,videos'});
-  document.title=`${d.title||d.name} — PeachFlix`;
-  const title=d.title||d.name;
-  const year=(d.release_date||d.first_air_date||'').slice(0,4);
-  c.querySelector('.d-hero').innerHTML=`<img src="${TMDB.img(d.backdrop_path||d.poster_path,'w1280')}" alt=""><div class="d-fade"></div>`;
-  const poster=c.querySelector('.d-poster');poster.classList.remove('sk');poster.src=TMDB.img(d.poster_path,'w342');
-  const h1=c.querySelector('h1');h1.classList.remove('sk');h1.style.cssText='';h1.textContent=title+(year?` (${year})`:'');
-  const meta=c.querySelector('.d-meta');meta.classList.remove('sk');meta.style.cssText='';
-  const seasonsCount=type==='tv'?(d.seasons||[]).filter(s=>s.season_number>0).length:0;
-  meta.innerHTML=`${d.vote_average?`<span class="star">★ ${d.vote_average.toFixed(1)}</span>`:''}
-    ${type==='movie'&&d.runtime?`<span>${Math.floor(d.runtime/60)}h ${d.runtime%60}m</span>`:''}
-    ${type==='tv'&&seasonsCount?`<span>${seasonsCount} season${seasonsCount===1?'':'s'}</span>`:''}
-    ${(d.genres||[]).slice(0,4).map(g=>`<span class="tag">${esc(g.name)}</span>`).join('')}`;
-  const ov=c.querySelector('.d-ov');ov.classList.remove('sk');ov.style.cssText='';
-  ov.textContent=d.overview||'No description available.';
-  const item={id:String(id),type,title,poster:d.poster_path||'',year};
-  const trailer=(d.videos?.results||[]).find(v=>v.site==='YouTube'&&(v.type==='Trailer'||v.type==='Teaser'));
-  c.querySelector('#d-btns').innerHTML=actionButtons(item,trailer?trailer.key:null,{play:true});
-  const rows=c.querySelector('.rows');
-  if(d.belongs_to_collection)rows.insertAdjacentHTML('beforeend',`<a class="banner" href="#/collection/${d.belongs_to_collection.id}"><span style="font-size:22px">🎞</span><div><b>${esc(d.belongs_to_collection.name)}</b><div class="muted" style="font-size:13px">View the full collection →</div></div></a>`);
-  const cast=(d.credits?.cast||[]).slice(0,20);
-  if(cast.length)rows.appendChild(el(`<section class="row"><h2>Cast</h2><div class="row-scroll">${cast.map(p=>`<a class="cast" href="#/person/${p.id}">${p.profile_path?`<img loading="lazy" src="${TMDB.img(p.profile_path,'w185')}" alt="">`:'<div class="noimg">👤</div>'}<div class="nm">${esc(p.name)}</div><div class="ch">${esc(p.character||'')}</div></a>`).join('')}</div></section>`));
-  if(type==='tv'){
-    const ss=(d.seasons||[]).filter(s=>s.season_number>0);
-    if(ss.length)rows.appendChild(el(`<section class="row"><h2>Seasons</h2><div class="row-scroll">${ss.map(s=>`<a class="card" href="#/watch/tv/${id}/${s.season_number}/1"><div class="card-img">${s.poster_path?`<img loading="lazy" src="${TMDB.img(s.poster_path,'w342')}" alt="">`:'<div class="noimg">🎬</div>'}</div><div class="card-t">${esc(s.name||'Season '+s.season_number)}</div><div class="card-s">${s.episode_count||'?'} episodes</div></a>`).join('')}</div></section>`));
-  }
-  const r1=rowEl('Recommended',d.recommendations?.results);if(r1)rows.appendChild(r1);
-  const r2=rowEl('More Like This',d.similar?.results);if(r2)rows.appendChild(r2);
-}
-
-async function WatchView(type,id,season,episode){
-  const s=Settings.get();
-  const c=el(`<div>
-    <div class="player-wrap"><iframe id="pf-frame" title="Peachify player" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
-    <div class="watch-body">
-      <h1 class="w-title"></h1>
-      <div class="w-meta muted"></div>
-      <div class="d-btns" id="w-btns"></div>
-      <p class="d-ov" id="w-ov"></p>
-    </div>
-    <div id="w-eps"></div>
-    <div class="rows"></div>
-  </div>`);
-  commit(c);
-  const meta=await tmdb(`/${type}/${id}`);
-  const title=meta.title||meta.name||'';
-  document.title=`▶ ${title} — PeachFlix`;
-  let seasons=[];
-  let seasonData=null;
-  if(type==='tv'){
-    seasons=(meta.seasons||[]).filter(x=>x.season_number>0);
-    if(seasons.length&&!seasons.some(x=>x.season_number===season))season=seasons[0].season_number;
-    seasonData=await tmdb(`/tv/${id}/season/${season}`).catch(()=>null);
-    if(seasonData&&seasonData.episodes){const max=seasonData.episodes.length;if(episode>max)episode=max;if(episode<1)episode=1}
-  }
-  const startAt=resumeFor(Progress.get(id),type,season,episode);
-  c.querySelector('#pf-frame').src=peachUrl({type,id,season,episode,startAt,dub:s.dub,sub:s.sub,quality:s.quality,server:s.server,accent:s.accent});
-  const item={id:String(id),type,title,poster:meta.poster_path||'',year:(meta.release_date||meta.first_air_date||'').slice(0,4)};
-  const h=c.querySelector('.w-title');h.textContent=title;
-  c.querySelector('.w-meta').innerHTML=[item.year,meta.vote_average?`<span class="star">★ ${meta.vote_average.toFixed(1)}</span>`:null,
-    type==='movie'&&meta.runtime?`${Math.floor(meta.runtime/60)}h ${meta.runtime%60}m`:null,
-    type==='tv'&&seasons.length?`${seasons.length} season${seasons.length===1?'':'s'}`:null].filter(Boolean).map(esc).join(' · ');
-  c.querySelector('#w-btns').innerHTML=actionButtons(item,null,{play:false});
-  const ovEl=c.querySelector('#w-ov');
-  ovEl.textContent=meta.overview||'';ovEl.style.display=meta.overview?'':'none';
-  if(type==='tv'&&seasonData){
-    const epsEl=c.querySelector('#w-eps');
-    const eps=seasonData.episodes||[];
-    const prev=episode>1;
-    let nextHref=null;
-    if(episode<eps.length)nextHref=`#/watch/tv/${id}/${season}/${episode+1}`;
-    else{const i=seasons.findIndex(x=>x.season_number===season);const ns=seasons[i+1];if(ns)nextHref=`#/watch/tv/${id}/${ns.season_number}/1`}
-    const renderEps=()=>{
-      const pNow=Progress.get(id);
-      epsEl.innerHTML=`<div class="eps-head"><h2>Episodes</h2>
-        <select id="season-sel">${seasons.map(x=>`<option value="${x.season_number}" ${x.season_number===season?'selected':''}>${esc(x.name||'Season '+x.season_number)}</option>`).join('')}</select></div>
-        <div class="eps">${eps.map(ep=>{
-          const n=ep.episode_number;
-          const pr=pNow?.show_progress?.[`s${season}e${n}`]?.progress;
-          const pct=pr&&pr.duration>0?Math.min(100,Math.round((pr.watched||0)/pr.duration*100)):0;
-          return`<a class="ep ${n===episode?'cur':''}" href="#/watch/tv/${id}/${season}/${n}">
-            ${ep.still_path?`<img loading="lazy" src="${TMDB.img(ep.still_path,'w300')}" alt="">`:'<div class="ep-noimg"></div>'}
-            <div class="ep-body"><div class="ep-n">E${n}${ep.runtime?` · ${ep.runtime}m`:''}</div><div class="ep-t">${esc(ep.name||'Episode '+n)}</div></div>
-            ${pct?`<div class="epbar"><i style="width:${pct}%"></i></div>`:''}
-          </a>`}).join('')}</div>
-        <div class="epnav">${prev?`<a class="btn ghost sm" href="#/watch/tv/${id}/${season}/${episode-1}">← Prev</a>`:''}${nextHref?`<a class="btn ghost sm" href="${nextHref}">Next →</a>`:''}</div>`;
-      epsEl.querySelector('#season-sel').onchange=e=>{location.hash=`#/watch/tv/${id}/${e.target.value}/1`};
-    };
-    renderEps();
-    const onMsg=ev=>{
-      if(ev.origin!==PEACHIFY_ORIGIN)return;
-      const m=ev.data;if(!m||typeof m.type!=='string')return;
-      if(m.type==='MEDIA_DATA'){Progress.merge(m.data);renderEps()}
-    };
-    window.addEventListener('message',onMsg);
-    cleanup=()=>window.removeEventListener('message',onMsg);
-  }
-  tmdb(`/${type}/${id}/recommendations`).then(r=>{
-    const row=rowEl('Recommended for you',r.results);if(row)c.querySelector('.rows').appendChild(row);
-  }).catch(()=>{});
-}
-
-async function SearchView(q0){
-  document.title='Search — PeachFlix';
-  const c=el(`<div>
-    <div class="search-wrap"><input id="q" type="search" placeholder="Search movies, series, people…" value="${esc(q0)}" autocomplete="off"></div>
-    <div class="seg" id="s-tabs">
-      <button class="on" data-tab="all">All</button><button data-tab="movie">Movies</button><button data-tab="tv">Series</button><button data-tab="person">People</button>
-    </div>
-    <div id="s-results"><p class="sub-h">Type at least 2 characters…</p></div>
-  </div>`);
-  commit(c);
-  const input=c.querySelector('#q'),res=c.querySelector('#s-results'),tabs=c.querySelector('#s-tabs');
-  let data=null,tab='all';
-  const render=()=>{
-    if(!data){res.innerHTML='<p class="sub-h">Type at least 2 characters…</p>';return}
-    const r=data.results||[];
-    const movies=r.filter(x=>x.media_type==='movie'),tvs=r.filter(x=>x.media_type==='tv'),people=r.filter(x=>x.media_type==='person');
-    let html='';
-    if(tab==='movie')html=movies.map(card).join('');
-    else if(tab==='tv')html=tvs.map(card).join('');
-    else if(tab==='person')html=people.map(personCard).join('');
-    else html=[...movies,...tvs].map(card).join('')+people.map(personCard).join('');
-    res.innerHTML=html?`<div class="grid">${html}</div>`:'<p class="sub-h">No results found.</p>';
-  };
-  const run=debounce(async q=>{
-    if(!q||q.length<2){data=null;render();return}
-    res.innerHTML=`<div class="grid">${'<div class="card"><div class="card-img sk"></div></div>'.repeat(9)}</div>`;
-    try{data=await tmdb('/search/multi',{query:q,include_adult:'false'})}catch{data={results:[]}}
-    render();
-  },400);
-  input.addEventListener('input',()=>run(input.value.trim()));
-  tabs.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;tab=b.dataset.tab;tabs.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));render()});
-  if(q0)run(q0);else if(window.innerWidth>899)setTimeout(()=>input.focus(),50);
-}
-
-function MineView(){
-  document.title='My Stuff — PeachFlix';
-  const c=el(`<div><div class="page-h">My Stuff</div>
-    <div class="seg" id="m-tabs">
-      <button class="on" data-tab="cw">▶ Continue</button>
-      <button data-tab="fav">♥ Favorites</button>
-      <button data-tab="wl">＋ Watchlist</button>
-      <button data-tab="gr">⊞ Groups</button>
-    </div><div id="m-body"></div></div>`);
-  commit(c);
-  const body=c.querySelector('#m-body');
-  const render=tab=>{
-    if(tab==='cw'){
-      const list=Progress.list().filter(notFinished);
-      body.innerHTML=list.length?`<div class="grid">${list.map(cwCard).join('')}</div>`:'<p class="sub-h">Nothing in progress yet — start watching something!</p>';
-    }else if(tab==='fav'||tab==='wl'){
-      const list=(tab==='fav'?Fav:WL).list();
-      body.innerHTML=list.length?`<div class="grid">${list.map(i=>itemCard(i,tab==='fav'?'fav-remove':'wl-remove')).join('')}</div>`:'<p class="sub-h">Empty — tap ♡ / ＋ on any title.</p>';
-    }else{
-      const g=Groups.all();
-      const uids=Object.keys(g).sort((a,b)=>g[b].created-g[a].created);
-      body.innerHTML=`<div class="gwrap">
-        <button class="btn primary sm" data-action="group-new">＋ New Group</button>
-        ${uids.map(u=>`<a class="gcard" href="#/list/${u}">
-          <div class="gname">⊞ ${esc(g[u].name)}</div>
-          <div class="muted">${g[u].items.length} title${g[u].items.length===1?'':'s'}</div>
-          <div class="gposters">${g[u].items.slice(0,5).map(i=>i.poster?`<img loading="lazy" src="${TMDB.img(i.poster,'w92')}" alt="">`:'').join('')}</div>
-        </a>`).join('')}
-      </div>${uids.length?'':'<p class="sub-h" style="padding-top:14px">Create groups to organize your own collections — “Marvel marathon”, “Friday comedy”, anything.</p>'}`;
-    }
-  };
-  c.querySelector('#m-tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;c.querySelectorAll('#m-tabs button').forEach(x=>x.classList.toggle('on',x===b));render(b.dataset.tab)});
-  render('cw');
-}
-
-function ListView(uid){
-  const g=Groups.get(uid);
-  if(!g){location.hash='#/mine';return}
-  document.title=`${g.name} — PeachFlix`;
-  commit(el(`<div>
-    <div class="page-h" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">⊞ ${esc(g.name)}
-      <button class="btn ghost sm" data-action="group-rename" data-uid="${esc(uid)}">✎ Rename</button>
-      <button class="btn ghost sm danger" data-action="group-delete" data-uid="${esc(uid)}">🗑 Delete</button>
-    </div>
-    <p class="sub-h">${g.items.length} title${g.items.length===1?'':'s'}</p>
-    ${g.items.length?`<div class="grid" style="padding-top:14px">${g.items.map(i=>itemCard(i,'group-item-remove',uid)).join('')}</div>`:'<p class="sub-h" style="padding-top:14px">Empty — add titles with the ⊞ Group button on any detail page.</p>'}
-  </div>`));
-}
-
-async function CollectionView(id){
-  const c=el(`<div><div class="page-h sk" style="height:32px;width:50%"></div><div class="grid">${'<div class="card"><div class="card-img sk"></div></div>'.repeat(6)}</div></div>`);
-  commit(c);
-  const d=await tmdb(`/collection/${id}`);
-  document.title=`${d.name} — PeachFlix`;
-  const parts=(d.parts||[]).slice().sort((a,b)=>(a.release_date||'').localeCompare(b.release_date||''));
-  c.innerHTML=`<div class="page-h">${esc(d.name||'Collection')}</div>
-    ${d.overview?`<p class="sub-h">${esc(d.overview)}</p>`:''}
-    <div class="grid" style="padding-top:14px">${parts.map(card).join('')}</div>`;
-}
-
-async function PersonView(id){
-  const c=el(`<div><div class="page-h sk" style="height:32px;width:40%"></div><div class="grid">${'<div class="card"><div class="card-img sk"></div></div>'.repeat(6)}</div></div>`);
-  commit(c);
-  const p=await tmdb(`/person/${id}`,{append_to_response:'combined_credits'});
-  document.title=`${p.name} — PeachFlix`;
-  const seen=new Set();
-  const kf=(p.combined_credits?.cast||[]).filter(x=>x.poster_path&&!seen.has(x.id)&&seen.add(x.id)).sort((a,b)=>(b.popularity||0)-(a.popularity||0)).slice(0,24);
-  c.innerHTML=`<div class="p-head">
-    ${p.profile_path?`<img src="${TMDB.img(p.profile_path,'h632')}" alt="">`:''}
-    <div>
-      <div class="page-h" style="padding:0">${esc(p.name||'')}</div>
-      <div class="muted">${esc(p.known_for_department||'')}${p.birthday?` · ${esc(p.birthday.slice(0,4))}`:''}${p.place_of_birth?` · ${esc(p.place_of_birth)}`:''}</div>
-      ${p.biography?`<div class="bio-wrap"><p class="bio">${esc(p.biography)}</p><button class="btn ghost sm" data-action="bio-more" style="margin-top:8px">Read more</button></div>`:''}
-    </div></div>
-    <div class="page-h" style="font-size:18px">Known For</div>
-    <div class="grid">${kf.map(card).join('')||'<p class="sub-h">No credits found.</p>'}</div>`;
-}
-
-function SettingsView(){
-  document.title='Settings — PeachFlix';
-  const s=Settings.get();
-  const c=el(`<div><div class="page-h">Settings</div>
-    <div class="form">
-      <div class="field"><label>TMDB API key (v3)</label>
-        <input id="set-key" type="text" value="${esc(s.tmdbKey)}" placeholder="32-character key from themoviedb.org" autocomplete="off">
-        <div class="hint">Free key: <a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener">themoviedb.org/settings/api</a> · stored only in this browser.</div>
-        <div class="mrow" style="justify-content:flex-start"><button class="btn ghost sm" data-action="test-key">Test key</button></div>
-      </div>
-      <div class="field"><label>Preferred audio (dub)</label><input data-set="dub" value="${esc(s.dub)}" placeholder="e.g. English, Hindi — blank = auto"></div>
-      <div class="field"><label>Preferred subtitles</label><input data-set="sub" value="${esc(s.sub)}" placeholder="e.g. English, eng, Arabic — blank = off"></div>
-      <div class="field"><label>Preferred quality</label><select data-set="quality">
-        <option value="">Auto</option>${['360','480','720','1080','2160'].map(q=>`<option value="${q}" ${s.quality===q?'selected':''}>${q==='2160'?'4K':q+'p'}</option>`).join('')}
-      </select></div>
-      <div class="field"><label>Preferred server</label><input data-set="server" value="${esc(s.server)}" placeholder="e.g. iron, spider, wolf — blank = auto"></div>
-      <div class="field"><label>Accent color</label><input data-set="accent" type="color" value="${esc(s.accent)}" style="height:44px;padding:4px"></div>
-      <div class="field"><label>Metadata language</label><select data-set="lang">
-        ${[['en-US','English'],['hi-IN','हिन्दी'],['es-ES','Español'],['fr-FR','Français'],['de-DE','Deutsch'],['ar-SA','العربية'],['ja-JP','日本語'],['ko-KR','한국어']].map(([v,n])=>`<option value="${v}" ${s.lang===v?'selected':''}>${n}</option>`).join('')}
-      </select></div>
-      <div class="field"><label>Data</label><div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn ghost sm" data-action="clear-cw">Clear watch history</button>
-        <button class="btn ghost sm danger" data-action="clear-all">Erase everything</button>
-      </div></div>
-      <p class="hint">PeachFlix · metadata by <a href="https://www.themoviedb.org" target="_blank" rel="noopener">TMDB</a> (not endorsed or certified by TMDB) · playback by <a href="https://peachify.top" target="_blank" rel="noopener">Peachify</a>.<br>Your key, favorites, groups and history never leave this device.</p>
-    </div></div>`);
-  commit(c);
-  c.querySelector('#set-key').addEventListener('change',e=>{Settings.set({tmdbKey:e.target.value.trim()});toast('API key saved')});
-  c.querySelectorAll('[data-set]').forEach(inp=>{
-    const ev=inp.type==='color'||inp.tagName==='SELECT'?'change':'input';
-    inp.addEventListener(ev,()=>Settings.set({[inp.dataset.set]:inp.value}));
-    if(inp.type==='color')inp.addEventListener('input',()=>Settings.set({accent:inp.value}));
-  });
-}
-
-/* ============================ group modal ============================ */
-let groupItem=null;
-function groupModal(item){
-  groupItem=item;
-  const g=Groups.all();
-  const uids=Object.keys(g).sort((a,b)=>g[b].created-g[a].created);
-  openModal(`<h3>Add “${esc(item.title)}” to a group</h3>
-    <div class="glist">${uids.map(u=>`<label class="grow2"><input type="checkbox" data-uid="${u}" ${g[u].items.some(i=>String(i.id)===String(item.id)&&i.type===item.type)?'checked':''}><span>${esc(g[u].name)} <em class="muted">(${g[u].items.length})</em></span></label>`).join('')||'<p class="muted" style="font-size:14px">No groups yet — create one below.</p>'}</div>
-    <div class="gnew"><input id="g-new" placeholder="New group name…" autocomplete="off"><button class="btn sm primary" data-action="g-create-in">Create</button></div>
-    <div class="mrow"><button class="btn ghost" data-action="modal-close">Done</button></div>`);
-}
-document.getElementById('modal-root').addEventListener('change',e=>{
-  const cb=e.target.closest('input[data-uid]');
-  if(!cb||!groupItem)return;
-  toast(Groups.toggle(cb.dataset.uid,groupItem)?'Added to group':'Removed from group');
-});
-
-/* ============================ global actions ============================ */
-document.addEventListener('click',async e=>{
-  const t=e.target.closest('[data-action]');if(!t)return;
-  const d=t.dataset;
-  const item=()=>({id:d.id,type:d.type,title:d.title,poster:d.poster,year:d.year});
-  switch(d.action){
-    case'goto-settings':location.hash='#/settings';break;
-    case'retry':route();break;
-    case'cw-remove':Progress.remove(d.id);route();break;
-    case'fav-toggle':{const on=Fav.toggle(item());t.classList.toggle('on',on);t.innerHTML=(on?'♥':'♡')+' Favorite';toast(on?'Added to Favorites':'Removed from Favorites');break}
-    case'wl-toggle':{const on=WL.toggle(item());t.classList.toggle('on',on);t.innerHTML=(on?'✓':'＋')+' Watchlist';toast(on?'Added to Watchlist':'Removed from Watchlist');break}
-    case'fav-remove':Fav.remove(d.type,d.id);route();break;
-    case'wl-remove':WL.remove(d.type,d.id);route();break;
-    case'group-item-remove':Groups.removeItem(d.uid,d.id,d.type);route();break;
-    case'group-add':groupModal(item());break;
-    case'g-create-in':{const inp=document.getElementById('g-new');const n=inp.value.trim();if(!n)return;const uid=Groups.create(n);Groups.toggle(uid,groupItem);groupModal(groupItem);break}
-    case'group-new':nameModal('New group','',n=>{Groups.create(n);route()});break;
-    case'group-rename':{const g=Groups.get(d.uid);if(g)nameModal('Rename group',g.name,n=>{Groups.rename(d.uid,n);route()});break}
-    case'group-delete':confirmModal('Delete this group?',()=>{Groups.remove(d.uid);route()});break;
-    case'share':share();break;
-    case'trailer':openModal(`<div class="trailer"><iframe src="https://www.youtube.com/embed/${encodeURIComponent(d.key)}?autoplay=1&rel=0" allow="autoplay; fullscreen; encrypted-media" allowfullscreen title="Trailer"></iframe></div><div class="mrow"><button class="btn ghost" data-action="modal-close">Close</button></div>`);break;
-    case'modal-close':closeModal();break;
-    case'bio-more':{const b=t.closest('.bio-wrap').querySelector('.bio');b.classList.toggle('open');t.textContent=b.classList.contains('open')?'Show less':'Read more';break}
-    case'onb-save':{const k=document.getElementById('onb-key').value.trim();if(k.length<20){toast("That doesn't look like a TMDB v3 key");return}Settings.set({tmdbKey:k});toast('Key saved 🎉');location.hash='#/';route();break}
-    case'test-key':{try{await tmdb('/configuration');toast('Key works ✔')}catch(err){toast(err.message)}break}
-    case'clear-cw':confirmModal('Clear continue-watching history?',()=>{Progress.clear();toast('Cleared');route()});break;
-    case'clear-all':confirmModal('Erase ALL local data (favorites, groups, history, settings)?',()=>{['pf_settings','pf_favs','pf_watchlist','pf_groups','peachifyProgress'].forEach(k=>localStorage.removeItem(k));location.hash='#/';route()});break;
-  }
-});
-
-/* ============================ router ============================ */
-function setNav(parts){
-  let key='home';
-  if(parts[0]==='browse')key=parts[1]==='tv'?'series':'movies';
-  else if(parts[0]==='movie')key='movies';
-  else if(parts[0]==='tv')key='series';
-  else if(parts[0]==='search')key='search';
-  else if(['mine','list'].includes(parts[0]))key='mine';
-  else if(['watch','settings','person','collection'].includes(parts[0]))key=null;
-  document.querySelectorAll('[data-nav]').forEach(a=>a.classList.toggle('active',a.dataset.nav===key));
-}
-async function route(){
-  ++routeId;
-  if(cleanup){try{cleanup()}catch{}cleanup=null}
-  const hash=(location.hash||'#/').slice(1);
-  const[pathStr,qs]=hash.split('?');
-  const q=new URLSearchParams(qs||'');
-  const parts=pathStr.split('/').filter(Boolean);
-  setNav(parts);
-  window.scrollTo(0,0);
-  try{
-    if(!Settings.get().tmdbKey)return Onboarding();
-    if(!parts.length)return await HomeView();
-    switch(parts[0]){
-      case'browse':return await BrowseView(parts[1]==='tv'?'tv':'movie',q);
-      case'movie':case'tv':return parts[1]?await DetailView(parts[0],parts[1]):await HomeView();
-      case'watch':return parts[2]?await WatchView(parts[1]==='tv'?'tv':'movie',parts[2],Math.max(1,parseInt(parts[3])||1),Math.max(1,parseInt(parts[4])||1)):await HomeView();
-      case'search':return await SearchView(q.get('q')||'');
-      case'mine':return MineView();
-      case'list':return ListView(parts[1]);
-      case'collection':return parts[1]?await CollectionView(parts[1]):await HomeView();
-      case'person':return parts[1]?await PersonView(parts[1]):await HomeView();
-      case'settings':return SettingsView();
-      default:return await HomeView();
-    }
-  }catch(err){console.error(err);view.innerHTML=errorBox(err)}
-}
-
-/* ============================ boot ============================ */
-applyAccent(Settings.get().accent);
-window.addEventListener('hashchange',route);
-route();
-})();
-</script>
-</body>
-</html>
+      let items=[],more=false;
+      if(keyed){
+        const sort=c.querySelector('#f-sort').value;
+        const p={page:state.page+1,sort_by:sort,include_adult:'false','vote_count.gte':sort==='vote_average.desc'?(tvType==='tv'?150:400):20};
+        if(isAnime){p.with_genres='16';p.with_original_language='ja'}
+        else if(state.genres.size)p.with_genres=[...state.genres].join(',');
+        const y=c.querySelector('#f-year').value;if(y)p[tvType==='tv'?'first_air_date_year':'primary_release_year']=y;
+        const r2=c.querySelector('#f-rate').value;if(r2)p['vote_average.gte']=r2;
+        const l=c.querySelector('#f-lang').value;if(l)p.with_original_language=l;
+        const r=await tmdb(`/discover/${tvType}`,p);
+        state.page=r.page;state.total=Math.min(r.total_pages||1,500);
+        items=(r.results||[]).map(tCard);more=state.page<state.total;
+      }else{
+        const skip=state.page*100;
+        let path;
+        if(isAnime)path=`/catalog/anime/kitsu-anime-trending/skip=${skip}.json`;
+        else{
+          const cat=type==='movie'?'movie':'series';
+          const g=state.genres.size
